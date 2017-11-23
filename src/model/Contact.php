@@ -32,16 +32,11 @@ class Contact extends DataObject implements PermissionProvider
         "Phone" => "Varchar(15)",
         "Mobile" => "Varchar(15)",
         "Email" => "Varchar(255)",
-        "Address1" => "Varchar(255)",
-        "Address2" => "Varchar(255)",
-        "City" => "Varchar(255)",
-        "County" => "Varchar(255)",
-        "Country" => "Varchar(255)",
-        "PostCode" => "Varchar(10)",
         "Source" => "Text"
     ];
     
     private static $has_many = [
+        "Locations" => ContactLocation::class,
         "Notes" => ContactNote::class
     ];
     
@@ -57,7 +52,8 @@ class Contact extends DataObject implements PermissionProvider
         'TagsList' => 'Varchar',
         'FlaggedNice' => 'Boolean',
         'FullName' => 'Varchar',
-        'Name' => 'Varchar'
+        'Name' => 'Varchar',
+        "DefaultAddress" => "Text"
     ];
     
     private static $summary_fields = [
@@ -65,10 +61,7 @@ class Contact extends DataObject implements PermissionProvider
         "FirstName" => "FirstName",
         "Surname" => "Surname",
         "Email" => "Email",
-        "Address1" => "Address1",
-        "Address2" => "Address2",
-        "City" => "City",
-        "PostCode" => "PostCode",
+        "DefaultAddress" => "Default Address",
         "TagsList" => "TagsList"
     ];
 
@@ -83,11 +76,11 @@ class Contact extends DataObject implements PermissionProvider
         "MiddleName",
         "Surname",
         "Email",
-        "Address1",
-        "Address2",
-        "City",
-        "Country",
-        "PostCode",
+        "Locations.Address1",
+        "Locations.Address2",
+        "Locations.City",
+        "Locations.Country",
+        "Locations.PostCode",
         "Tags.Title",
         "Lists.Title"
     ];
@@ -137,6 +130,37 @@ class Contact extends DataObject implements PermissionProvider
         $obj = HTMLText::create();
         $obj->setValue(($this->Flagged)? '<span class="red">&#10033;</span>' : '');
         return $obj;
+    }
+
+    /**
+     * Find from our locations one marked as default (of if not the
+     * first in the list).
+     *
+     * @return ContactLocation
+     */
+    public function DefaultLocation()
+    {
+        return $this
+            ->Locations()
+            ->sort("Default", "DESC")
+            ->first();
+    }
+
+    /**
+     * Find from our locations one marked as default (of if not the
+     * first in the list).
+     *
+     * @return string
+     */
+    public function getDefaultAddress()
+    {
+        $location = $this->DefaultLocation();
+
+        if ($location->exists()) {
+            return $location->Address;
+        } else {
+            return "";
+        }
     }
 
 	/**

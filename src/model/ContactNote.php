@@ -16,7 +16,7 @@ use SilverCommerce\ContactAdmin\Model\ContactTag;
  * @author ilateral
  * @package Contacts
  */
-class Note extends DataObject
+class ContactNote extends DataObject
 {
     private static $table_name = 'ContactNote';
 
