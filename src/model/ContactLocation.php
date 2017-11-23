@@ -170,8 +170,10 @@ class ContactLocation extends DataObject implements PermissionProvider
 
         if ($this->Default) {
             foreach ($this->Contact()->Locations() as $location) {
-                $location->Default = false;
-                $location->write();
+                if ($location->ID != $this->ID && $location->Default) {
+                    $location->Default = false;
+                    $location->write();
+                }
             }
         }
     }
