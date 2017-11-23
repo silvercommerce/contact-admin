@@ -1,8 +1,8 @@
 {
-    "name": "i-lateral/silverstripe-contacts",
+    "name": "silvercommerce/contact-admin",
     "description": "Contact management module, allowing import, export, management, grouping and tagging of contacts",
     "type": "silverstripe-vendormodule",
-    "homepage": "https://github.com/i-lateral/silverstripe-contacts",
+    "homepage": "https://github.com/silvercommerce/contact-admin",
     "keywords": [
         "silverstripe",
         "admin",
@@ -14,13 +14,16 @@
         "name": "ilateral",
         "email": "info@ilateral.co.uk"
     }],
+    "support": {
+        "issues": "https://github.com/silvercommerce/contact-admin/issues"
+    },
     "require": {
         "silverstripe/framework": "^4.0",
         "colymba/gridfield-bulk-editing-tools": "dev-master",
         "silverstripe/tagfield": "^2.0"
     },
     "replace": {
-        "silverstripe/contacts": "self.version"
+        "i-lateral/silverstripe-contacts": "self.version"
     },
     "extra": {
         "expose": [
@@ -29,7 +32,7 @@
     },
     "autoload": {
         "psr-4": {
-            "ilateral\\SilverStripe\\Contacts\\": "src/"
+            "SilverCommerce\\ContactAdmin\\": "src/"
         }
     },
     "minimum-stability": "dev",

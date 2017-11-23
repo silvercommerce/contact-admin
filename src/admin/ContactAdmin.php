@@ -1,10 +1,17 @@
 <?php
 
-namespace ilateral\SilverStripe\Contacts\Admin;
+namespace SilverCommerce\ContactAdmin\Admin;
 
 use Silverstripe\Admin\ModelAdmin;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Dev\CsvBulkLoader;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use Colymba\BulkManager\BulkManager;
+use SilverCommerce\ContactAdmin\Model\Contact;
+use SilverCommerce\ContactAdmin\Model\ContactTag;
+use SilverCommerce\ContactAdmin\Model\ContactList;
+use SilverCommerce\ContactAdmin\BulkActions\AssignToList;
 
 /**
  * Management interface for contacts
@@ -18,9 +25,9 @@ class ContactAdmin extends ModelAdmin
     private static $menu_priority = 8;
 
     private static $managed_models = [
-        "ilateral\\SilverStripe\\Contacts\\Model\\Contact",
-        "ilateral\\SilverStripe\\Contacts\\Model\\ContactTag",
-        "ilateral\\SilverStripe\\Contacts\\Model\\ContactList"
+        Contact::class,
+        ContactTag::class,
+        ContactList::class
     ];
 
     private static $url_segment = 'contacts';
@@ -28,23 +35,23 @@ class ContactAdmin extends ModelAdmin
     private static $menu_title = 'Contacts';
 
     private static $model_importers = [
-        'ilateral\\SilverStripe\\Contacts\\Model\\ContactList' => 'SilverStripe\\Dev\\CSVBulkLoader'
+        ContactList::class => CSVBulkLoader::class
     ];
 
     public $showImportForm = [
-        'ilateral\\SilverStripe\\Contacts\\Model\\ContactList'
+        ContactList::class
     ];
 
     /**
      * @var string
      */
     private static $menu_icon_class = 'font-icon-torso';
-    
+
     public function getSearchContext()
     {
         $context = parent::getSearchContext();
 
-        if ($this->modelClass == "ilateral\\SilverStripe\\Contacts\\Model\\Contact") {
+        if ($this->modelClass == Contact::class) {
             $context
                 ->getFields()
                 ->push(new CheckboxField('q[Flagged]', _t("Contacts.ShowFlaggedOnly", 'Show flagged only')));
@@ -52,7 +59,7 @@ class ContactAdmin extends ModelAdmin
 
         return $context;
     }
-    
+
     public function getList()
     {
         $list = parent::getList();
@@ -60,7 +67,7 @@ class ContactAdmin extends ModelAdmin
         // use this to access search parameters
         $params = $this->request->requestVar('q');
 
-        if ($this->modelClass == "ilateral-SilverStripe-Contacts-Model-Contact" && isset($params['Flagged']) && $params['Flagged']) {
+        if ($this->modelClass == Contact::class && isset($params['Flagged']) && $params['Flagged']) {
             $list = $list->filter(
                 "Notes.Flag",
                 true
@@ -69,12 +76,10 @@ class ContactAdmin extends ModelAdmin
 
         return $list;
     }
-       
+
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
-        
-        $class = $this->sanitiseClassName($this->modelClass);
         $gridField = $form->Fields()->fieldByName($class);
         $config = $gridField->getConfig();
 
@@ -82,11 +87,11 @@ class ContactAdmin extends ModelAdmin
         $manager = new BulkManager();
         $manager->removeBulkAction("unLink");
 
-        if ($class == "ilateral-SilverStripe-Contacts-Model-Contact") {
+        if ($this->modelClass == Contact::class) {
             $manager->addBulkAction(
                 "assign",
                 _t("Contacts.AssignToList", "Assign to list"),
-                "ilateral\\SilverStripe\\Contacts\\BulkActions\\AssignToList",
+                AssignToList::class,
                 array(
                     'isAjax' => false,
                     'icon' => 'pencil',
@@ -95,14 +100,14 @@ class ContactAdmin extends ModelAdmin
             );
         } else {
             $config
-                ->removeComponentsByType("GridFieldExportButton")
-                ->removeComponentsByType("GridFieldPrintButton");
+                ->removeComponentsByType(GridFieldExportButton::class)
+                ->removeComponentsByType(GridFieldPrintButton::class);
         }
-        
+
         $config->addComponents($manager);
-        
+
         $this->extend("updateEditForm", $form);
-        
+
         return $form;
     }
 }

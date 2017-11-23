@@ -1,6 +1,6 @@
 <?php
 
-namespace ilateral\SilverStripe\Contacts\BulkActions;
+namespace SilverCommerce\ContactAdmin\BulkActions;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Controller;
@@ -13,7 +13,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FormAction;
-use ilateral\SilverStripe\Contacts\Model\ContactList;
+use SilverCommerce\ContactAdmin\Model\ContactList;
 use Colymba\BulkManager\BulkAction\Handler as BulkActionHandler;
 
 /**

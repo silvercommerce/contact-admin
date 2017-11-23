@@ -3,4 +3,4 @@ Name: contactsconfig
 ---
 SilverStripe\Admin\LeftAndMain:
   extensions:
-    - ilateral\SilverStripe\Contacts\Extensions\ContactsAdminExtension
+    - SilverCommerce\ContactAdmin\Extensions\ContactsAdminExtension

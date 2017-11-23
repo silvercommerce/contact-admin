@@ -1,6 +1,6 @@
 <?php
 
-namespace ilateral\SilverStripe\Contacts\Model;
+namespace SilverCommerce\ContactAdmin\Model;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBHTMLText as HTMLText;
@@ -8,7 +8,7 @@ use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\TagField\TagField;
-use ilateral\SilverStripe\Contacts\Model\ContactTag;
+use SilverCommerce\ContactAdmin\Model\ContactTag;
 
 /**
  * Notes on a particular contact
@@ -18,7 +18,7 @@ use ilateral\SilverStripe\Contacts\Model\ContactTag;
  */
 class Note extends DataObject
 {
-    private static $table_name = 'Note';
+    private static $table_name = 'ContactNote';
 
     private static $db = [
         "Content" => "Text",
@@ -26,7 +26,7 @@ class Note extends DataObject
     ];
     
     private static $has_one = [
-        "Contact" => "ilateral\\SilverStripe\\Contacts\\Model\\Contact"
+        "Contact" => Contact::class
     ];
     
     private static $casting = [

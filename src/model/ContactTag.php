@@ -1,6 +1,6 @@
 <?php
 
-namespace ilateral\SilverStripe\Contacts\Model;
+namespace SilverCommerce\ContactAdmin\Model;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
@@ -26,7 +26,7 @@ class ContactTag extends DataObject implements PermissionProvider
     );
 
     private static $belongs_many_many = [
-        'Contacts' => 'ilateral\\SilverStripe\\Contacts\\Model\\Contact',
+        'Contacts' => Contact::class,
     ];
     
     private static $summary_fields = [
@@ -82,7 +82,7 @@ class ContactTag extends DataObject implements PermissionProvider
         );
     }
 
-    public function canView($member = false, $context = [])
+    public function canView($member = false)
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
 
@@ -90,15 +90,11 @@ class ContactTag extends DataObject implements PermissionProvider
             return $extended;
         }
         
-        if ($member instanceof Member) {
-            $memberID = $member->ID;
-        } elseif (is_numeric($member)) {
-            $memberID = $member;
-        } else {
-            $memberID = Member::currentUserID();
+        if (!$member) {
+            $member = Member::currentUser();
         }
             
-        if ($memberID && Permission::checkMember($memberID, array("ADMIN", "CONTACTS_TAGS_MANAGE"))) {
+        if ($member && Permission::checkMember($member->ID, array("ADMIN", "CONTACTS_TAGS_MANAGE"))) {
             return true;
         }
 
@@ -107,28 +103,24 @@ class ContactTag extends DataObject implements PermissionProvider
 
     public function canCreate($member = null, $context = [])
     {
-        $extended = $this->extendedCan(__FUNCTION__, $member);
+        $extended = $this->extendedCan(__FUNCTION__, $member, $context);
 
         if ($extended !== null) {
             return $extended;
         }
         
-        if ($member instanceof Member) {
-            $memberID = $member->ID;
-        } elseif (is_numeric($member)) {
-            $memberID = $member;
-        } else {
-            $memberID = Member::currentUserID();
+        if (!$member) {
+            $member = Member::currentUser();
         }
             
-        if ($memberID && Permission::checkMember($memberID, array("ADMIN", "CONTACTS_TAGS_MANAGE"))) {
+        if ($member && Permission::checkMember($member->ID, array("ADMIN", "CONTACTS_TAGS_MANAGE"))) {
             return true;
         }
 
         return false;
     }
 
-    public function canEdit($member = null, $context = [])
+    public function canEdit($member = null)
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
 
@@ -136,22 +128,18 @@ class ContactTag extends DataObject implements PermissionProvider
             return $extended;
         }
         
-        if ($member instanceof Member) {
-            $memberID = $member->ID;
-        } elseif (is_numeric($member)) {
-            $memberID = $member;
-        } else {
-            $memberID = Member::currentUserID();
+        if (!$member) {
+            $member = Member::currentUser();
         }
             
-        if ($memberID && Permission::checkMember($memberID, array("ADMIN", "CONTACTS_TAGS_MANAGE"))) {
+        if ($member && Permission::checkMember($member->ID, array("ADMIN", "CONTACTS_TAGS_MANAGE"))) {
             return true;
         }
 
         return false;
     }
 
-    public function canDelete($member = null, $context = [])
+    public function canDelete($member = null)
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
 
@@ -159,15 +147,11 @@ class ContactTag extends DataObject implements PermissionProvider
             return $extended;
         }
         
-        if ($member instanceof Member) {
-            $memberID = $member->ID;
-        } elseif (is_numeric($member)) {
-            $memberID = $member;
-        } else {
-            $memberID = Member::currentUserID();
+        if (!$member) {
+            $member = Member::currentUser();
         }
             
-        if ($memberID && Permission::checkMember($memberID, array("ADMIN", "CONTACTS_TAGS_DELETE"))) {
+        if ($member && Permission::checkMember($member->ID, array("ADMIN", "CONTACTS_TAGS_MANAGE"))) {
             return true;
         }
 
