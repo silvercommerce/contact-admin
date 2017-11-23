@@ -22,7 +22,7 @@ use SilverCommerce\ContactAdmin\BulkActions\AssignToList;
 class ContactAdmin extends ModelAdmin
 {
     
-    private static $menu_priority = 8;
+    private static $menu_priority = 0;
 
     private static $managed_models = [
         Contact::class,
@@ -80,6 +80,7 @@ class ContactAdmin extends ModelAdmin
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
+        $class = $this->sanitiseClassName($this->modelClass);
         $gridField = $form->Fields()->fieldByName($class);
         $config = $gridField->getConfig();
 
