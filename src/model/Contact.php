@@ -50,6 +50,7 @@ class Contact extends DataObject implements PermissionProvider
     
     private static $casting = [
         'TagsList' => 'Varchar',
+        'ListsList' => 'Varchar',
         'FlaggedNice' => 'Boolean',
         'FullName' => 'Varchar',
         'Name' => 'Varchar',
@@ -62,7 +63,8 @@ class Contact extends DataObject implements PermissionProvider
         "Surname" => "Surname",
         "Email" => "Email",
         "DefaultAddress" => "Default Address",
-        "TagsList" => "TagsList"
+        "TagsList" => "Tags",
+        "ListsList" => "Lists"
     ];
 
     private static $default_sort = [
@@ -173,23 +175,28 @@ class Contact extends DataObject implements PermissionProvider
 		return ($this->Surname) ? trim($this->FirstName . ' ' . $this->Surname) : $this->FirstName;
 	}
     
+    /**
+     * Generate as string of tag titles seperated by a comma
+     *
+     * @return string
+     */
     public function getTagsList()
     {
         $return = "";
-        $tags = $this->Tags();
-        $i = 1;
-        
-        foreach ($tags as $tag) {
-            $return .= $tag->Title;
-            
-            if ($i < $tags->count()) {
-                $return .= ", ";
-            }
-            
-            $i++;
-        }
-        
-        return $return;
+        $tags = $this->Tags()->column("Title");
+        return implode(", ", $tags);
+    }
+    
+    /**
+     * Generate as string of list titles seperated by a comma
+     *
+     * @return string
+     */
+    public function getListsList()
+    {
+        $return = "";
+        $tags = $this->Lists()->column("Title");
+        return implode(", ", $tags);
     }
     
     public function getFlagged()
