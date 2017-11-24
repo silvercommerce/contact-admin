@@ -158,7 +158,7 @@ class Contact extends DataObject implements PermissionProvider
     {
         $location = $this->DefaultLocation();
 
-        if ($location->exists()) {
+        if ($location) {
             return $location->Address;
         } else {
             return "";
