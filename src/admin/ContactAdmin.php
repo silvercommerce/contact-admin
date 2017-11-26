@@ -35,10 +35,14 @@ class ContactAdmin extends ModelAdmin
     private static $menu_title = 'Contacts';
 
     private static $model_importers = [
+        Contact::class => CSVBulkLoader::class,
+        ContactTag::class => CSVBulkLoader::class,
         ContactList::class => CSVBulkLoader::class
     ];
 
     public $showImportForm = [
+        Contact::class,
+        ContactTag::class,
         ContactList::class
     ];
 
