@@ -23,6 +23,14 @@ class Contact extends DataObject implements PermissionProvider
 {
     private static $table_name = 'Contact';
 
+    /**
+     * String used to seperate tags, lists, etc
+     * when rendering a summary.
+     *
+     * @var string
+     */
+    private static $list_seperator = ", ";
+
     private static $db = [
         "Salutation" => "Varchar(20)",
         "FirstName" => "Varchar(255)",
@@ -109,8 +117,12 @@ class Contact extends DataObject implements PermissionProvider
         if (!empty($this->Email)) {
             $e = "($this->Email)";
         }
+
+        $title = $t.$f.$m.$s.$e;
+
+        $this->extend("updateTitle", $title);
         
-		return $t.$f.$m.$s.$e;
+		return $title;
 	}
 
     public function getFullName() 
@@ -124,13 +136,20 @@ class Contact extends DataObject implements PermissionProvider
 		$s = '';
 		if (!empty($this->Surname)) $s = "$this->Surname ";
         
-		return $t.' '.$f.' '.$m.' '.$s;
+        $name = $t.' '.$f.' '.$m.' '.$s;
+        
+        $this->extend("updateFullName", $name);
+
+        return $name;
 	}
     
     public function getFlaggedNice()
     {
         $obj = HTMLText::create();
         $obj->setValue(($this->Flagged)? '<span class="red">&#10033;</span>' : '');
+
+        $this->extend("updateFlaggedNice", $obj);
+       
         return $obj;
     }
 
@@ -142,10 +161,14 @@ class Contact extends DataObject implements PermissionProvider
      */
     public function DefaultLocation()
     {
-        return $this
+        $location = $this
             ->Locations()
             ->sort("Default", "DESC")
             ->first();
+        
+        $this->extend("updateDefaultLocation", $location);
+
+        return $location;
     }
 
     /**
@@ -172,7 +195,11 @@ class Contact extends DataObject implements PermissionProvider
 	 */
 	public function getName() 
     {
-		return ($this->Surname) ? trim($this->FirstName . ' ' . $this->Surname) : $this->FirstName;
+        $name = ($this->Surname) ? trim($this->FirstName . ' ' . $this->Surname) : $this->FirstName;
+        
+        $this->extend("updateName", $name);
+
+        return $name;
 	}
     
     /**
@@ -184,7 +211,13 @@ class Contact extends DataObject implements PermissionProvider
     {
         $return = "";
         $tags = $this->Tags()->column("Title");
-        return implode(", ", $tags);
+        
+        $this->extend("updateTagsList", $tags);
+        
+        return implode(
+            $this->config()->list_seperator,
+            $tags
+        );
     }
     
     /**
@@ -195,8 +228,14 @@ class Contact extends DataObject implements PermissionProvider
     public function getListsList()
     {
         $return = "";
-        $tags = $this->Lists()->column("Title");
-        return implode(", ", $tags);
+        $list = $this->Lists()->column("Title");
+
+        $this->extend("updateListsList", $tags);
+
+        return implode(
+            $this->config()->list_seperator,
+            $list
+        );
     }
     
     public function getFlagged()
@@ -208,6 +247,9 @@ class Contact extends DataObject implements PermissionProvider
                 $flagged = true;
             }
         }
+
+        $this->extend("updateFlagged", $flagged);
+
         return $flagged;
     }
     

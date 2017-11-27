@@ -49,6 +49,9 @@ class ContactNote extends DataObject
     {
         $obj = HTMLText::create();
         $obj->setValue(($this->Flag)? '<span class="red">&#10033;</span>' : '');
+        
+        $this->extend("updateFlaggedNice", $obj);
+        
         return $obj;
     }
 }

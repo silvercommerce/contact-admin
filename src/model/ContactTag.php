@@ -21,9 +21,9 @@ class ContactTag extends DataObject implements PermissionProvider
 
     private static $plural_name = 'Tags';
         
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar(255)',
-    );
+    ];
 
     private static $belongs_many_many = [
         'Contacts' => Contact::class,

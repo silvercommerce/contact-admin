@@ -52,7 +52,11 @@ class ContactLocation extends DataObject implements PermissionProvider
 
     public function getTitle()
     {
-        return $this->Address1 . " (" . $this->PostCode . ")";
+        $title = $this->Address1 . " (" . $this->PostCode . ")";
+
+        $this->extend("updateTitle", $title);
+
+        return $title;
     }
 
     public function getAddress() 
@@ -72,6 +76,8 @@ class ContactLocation extends DataObject implements PermissionProvider
 
         $return[] = $this->Country;
         $return[] = $this->PostCode;
+
+        $this->extend("updateAddress", $return);
         
 		return implode(",\n", $return);
 	}
@@ -88,8 +94,8 @@ class ContactLocation extends DataObject implements PermissionProvider
     
     public function providePermissions()
     {
-        return array(
-            "CONTACTS_MANAGE" => array(
+        return [
+            "CONTACTS_MANAGE" => [
                 'name' => _t(
                     'Contacts.PERMISSION_MANAGE_CONTACTS_DESCRIPTION',
                     'Manage contacts'
@@ -99,8 +105,8 @@ class ContactLocation extends DataObject implements PermissionProvider
                     'Allow creation and editing of contacts'
                 ),
                 'category' => _t('Contacts.Contacts', 'Contacts')
-            ),
-            "CONTACTS_DELETE" => array(
+            ],
+            "CONTACTS_DELETE" => [
                 'name' => _t(
                     'Contacts.PERMISSION_DELETE_CONTACTS_DESCRIPTION',
                     'Delete contacts'
@@ -110,8 +116,8 @@ class ContactLocation extends DataObject implements PermissionProvider
                     'Allow deleting of contacts'
                 ),
                 'category' => _t('Contacts.Contacts', 'Contacts')
-            )
-        );
+            ]
+        ];
     }
     
     public function canView($member = false)
