@@ -331,7 +331,7 @@ class Contact extends DataObject implements PermissionProvider
         );
     }
     
-    public function canView($member = false)
+    public function canView($member = null)
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
 
@@ -343,7 +343,7 @@ class Contact extends DataObject implements PermissionProvider
             $member = Member::currentUser();
         }
 
-        if ($member && Permission::checkMember($member->ID, array("ADMIN", "CONTACTS_TAGS_MANAGE"))) {
+        if ($member && Permission::checkMember($member->ID, "CONTACTS_MANAGE")) {
             return true;
         }
 
@@ -362,7 +362,7 @@ class Contact extends DataObject implements PermissionProvider
             $member = Member::currentUser();
         }
 
-        if ($member && Permission::checkMember($member->ID, array("ADMIN", "CONTACTS_TAGS_MANAGE"))) {
+        if ($member && Permission::checkMember($member->ID, "CONTACTS_MANAGE")) {
             return true;
         }
 
@@ -381,7 +381,7 @@ class Contact extends DataObject implements PermissionProvider
             $member = Member::currentUser();
         }
 
-        if ($member && Permission::checkMember($member->ID, array("ADMIN", "CONTACTS_TAGS_MANAGE"))) {
+        if ($member && Permission::checkMember($member->ID, "CONTACTS_MANAGE")) {
             return true;
         }
 
@@ -400,7 +400,7 @@ class Contact extends DataObject implements PermissionProvider
             $member = Member::currentUser();
         }
 
-        if ($member && Permission::checkMember($member->ID, array("ADMIN", "CONTACTS_TAGS_MANAGE"))) {
+        if ($member && Permission::checkMember($member->ID, "CONTACTS_DELETE")) {
             return true;
         }
 

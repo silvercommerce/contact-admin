@@ -120,7 +120,7 @@ class ContactLocation extends DataObject implements PermissionProvider
         ];
     }
     
-    public function canView($member = false)
+    public function canView($member = null)
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
 
@@ -139,7 +139,15 @@ class ContactLocation extends DataObject implements PermissionProvider
             return $extended;
         }
 
-        return $this->Contact()->canCreate($member, $context);
+        if (!$member) {
+            $member = Member::currentUser();
+        }
+
+        if ($member && Permission::checkMember($member->ID, "CONTACTS_MANAGE")) {
+            return true;
+        }
+
+        return false;
     }
 
     public function canEdit($member = null)
@@ -150,7 +158,7 @@ class ContactLocation extends DataObject implements PermissionProvider
             return $extended;
         }
 
-        return $this->Contact()->canView($member);
+        return $this->Contact()->canEdit($member);
     }
 
     public function canDelete($member = null, $context = [])
