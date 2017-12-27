@@ -11,3 +11,7 @@
 ## 1.0.2
 
 * Add additional extension hooks to model classes
+
+## 1.0.3
+
+* Clean up permissions and add can functions to notes
