@@ -15,3 +15,7 @@
 ## 1.0.3
 
 * Clean up permissions and add can functions to notes
+
+## 1.0.4
+
+* Ensure associations are removed from the DB on contact deletion
