@@ -406,4 +406,23 @@ class Contact extends DataObject implements PermissionProvider
 
         return false;
     }
+
+    /**
+     * Cleanup DB on removal
+     *
+     */
+    public function onBeforeDelete()
+    {
+        parent::onBeforeDelete();
+        
+        // Delete all locations attached to this order
+        foreach ($this->Locations() as $item) {
+            $item->delete();
+        }
+
+        // Delete all notes attached to this order
+        foreach ($this->Notes() as $item) {
+            $item->delete();
+        }
+    }
 }
