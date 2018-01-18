@@ -19,3 +19,7 @@
 ## 1.0.4
 
 * Ensure associations are removed from the DB on contact deletion
+
+## 1.0.5
+
+* Switch bulk editing dependency 
