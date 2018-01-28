@@ -23,3 +23,8 @@
 ## 1.0.5
 
 * Switch bulk editing dependency 
+
+## 1.0.6
+
+* Add ability to bulk assign tags to contacts
+* Add bulk editing fields to tags and lists 

@@ -6,6 +6,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionProvider;
+use Colymba\BulkManager\BulkManager;
 
 /**
  * A container for grouping contacts
@@ -56,6 +57,13 @@ class ContactList extends DataObject implements PermissionProvider
         $fields->removeByName("Contacts");
 
         if ($contacts_field) {
+            $manager = new BulkManager();
+            $manager->removeBulkAction("delete");
+            $manager->removeBulkAction("bulkEdit");
+            
+            $config = $contacts_field->getConfig();
+            $config->addComponent($manager);
+
             $fields->addFieldToTab(
                 'Root.Main',
                 $contacts_field
