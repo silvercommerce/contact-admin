@@ -11,7 +11,7 @@ use Colymba\BulkManager\BulkManager;
 use SilverCommerce\ContactAdmin\Model\Contact;
 use SilverCommerce\ContactAdmin\Model\ContactTag;
 use SilverCommerce\ContactAdmin\Model\ContactList;
-use SilverCommerce\ContactAdmin\BulkActions\AssignToList;
+use SilverCommerce\ContactAdmin\BulkActions\AssignToListOrTags;
 
 /**
  * Management interface for contacts
@@ -94,14 +94,25 @@ class ContactAdmin extends ModelAdmin
 
         if ($this->modelClass == Contact::class) {
             $manager->addBulkAction(
-                "assign",
+                "assign/list",
                 _t("Contacts.AssignToList", "Assign to list"),
-                AssignToList::class,
-                array(
+                AssignToListOrTags::class,
+                [
                     'isAjax' => false,
                     'icon' => 'pencil',
                     'isDestructive' => false
-                )
+                ]
+            );
+
+            $manager->addBulkAction(
+                "assign/tags",
+                _t("Contacts.AddTags", "Add Tags"),
+                AssignToListOrTags::class,
+                [
+                    'isAjax' => false,
+                    'icon' => 'pencil',
+                    'isDestructive' => false
+                ]
             );
         } else {
             $config
