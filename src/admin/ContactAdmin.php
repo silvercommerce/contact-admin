@@ -3,15 +3,17 @@
 namespace SilverCommerce\ContactAdmin\Admin;
 
 use Silverstripe\Admin\ModelAdmin;
-use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Dev\CsvBulkLoader;
-use SilverStripe\Forms\GridField\GridFieldExportButton;
-use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use Colymba\BulkManager\BulkManager;
+use SilverStripe\Forms\CheckboxField;
 use SilverCommerce\ContactAdmin\Model\Contact;
 use SilverCommerce\ContactAdmin\Model\ContactTag;
+use Colymba\BulkManager\BulkAction\UnlinkHandler;
 use SilverCommerce\ContactAdmin\Model\ContactList;
-use SilverCommerce\ContactAdmin\BulkActions\AssignToListOrTags;
+use SilverStripe\Forms\GridField\GridFieldPrintButton;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverCommerce\ContactAdmin\BulkActions\AddTagsHandler;
+use SilverCommerce\ContactAdmin\BulkActions\AddToListHandler;
 
 /**
  * Management interface for contacts
@@ -90,30 +92,11 @@ class ContactAdmin extends ModelAdmin
 
         // Add bulk editing to gridfield
         $manager = new BulkManager();
-        $manager->removeBulkAction("unLink");
+        $manager->removeBulkAction(UnlinkHandler::class);
 
         if ($this->modelClass == Contact::class) {
-            $manager->addBulkAction(
-                "assign/list",
-                _t("Contacts.AssignToList", "Assign to list"),
-                AssignToListOrTags::class,
-                [
-                    'isAjax' => false,
-                    'icon' => 'pencil',
-                    'isDestructive' => false
-                ]
-            );
-
-            $manager->addBulkAction(
-                "assign/tags",
-                _t("Contacts.AddTags", "Add Tags"),
-                AssignToListOrTags::class,
-                [
-                    'isAjax' => false,
-                    'icon' => 'pencil',
-                    'isDestructive' => false
-                ]
-            );
+            $manager->addBulkAction(AddTagsHandler::class);
+            $manager->addBulkAction(AddToListHandler::class);
         } else {
             $config
                 ->removeComponentsByType(GridFieldExportButton::class)
