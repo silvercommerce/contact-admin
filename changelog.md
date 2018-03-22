@@ -28,3 +28,7 @@
 
 * Add ability to bulk assign tags to contacts
 * Add bulk editing fields to tags and lists 
+
+## 1.1.0
+
+* Update to work with latest bulk manager
