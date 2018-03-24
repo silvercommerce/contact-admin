@@ -154,8 +154,8 @@ class AddTagsHandler extends AddRelatedHandler
     public function doAddTags($data, $form)
     {
         $className  = $this->gridField->list->dataClass;
-        $singleton  = singleton($className);
-
+        $controller = $this->getToplevelController();
+        $form = $controller->EditForm();
         $return = array();
 
         if (isset($data['RecordIDs'])) {
@@ -189,8 +189,6 @@ class AddTagsHandler extends AddRelatedHandler
                 }
             }
         } catch (\Exception $e) {
-            $controller = $this->controller;
-            
             $form->sessionMessage(
                 $e->getResult()->message(),
                 ValidationResult::TYPE_ERROR
@@ -211,9 +209,6 @@ class AddTagsHandler extends AddRelatedHandler
             
             return $responseNegotiator->respond($controller->getRequest());
         }
-        
-        $controller = $this->getToplevelController();
-        $form = $controller->EditForm();
         
         if (count($tags_list)) {
             $message = "Added " . count($return) . " contacts to tags '" . implode(",",$tags_list) . "'";

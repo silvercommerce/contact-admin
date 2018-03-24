@@ -151,8 +151,8 @@ class AddToListHandler extends AddRelatedHandler
     public function doAddToList($data, $form)
     {
         $className  = $this->gridField->list->dataClass;
-        $singleton  = singleton($className);
-        
+        $controller = $this->getToplevelController();
+        $form = $controller->EditForm();
         $return = array();
 
         if (isset($data['RecordIDs'])) {
@@ -178,8 +178,6 @@ class AddToListHandler extends AddRelatedHandler
                 }
             }
         } catch (\Exception $e) {
-            $controller = $this->controller;
-            
             $form->sessionMessage(
                 $e->getResult()->message(),
                 ValidationResult::TYPE_ERROR
@@ -200,9 +198,6 @@ class AddToListHandler extends AddRelatedHandler
             
             return $responseNegotiator->respond($controller->getRequest());
         }
-        
-        $controller = $this->getToplevelController();
-        $form = $controller->EditForm();
         
         if (!empty($list)) {
             $message = "Added " . count($return) . " contacts to mailing list '{$list->Title}'";
