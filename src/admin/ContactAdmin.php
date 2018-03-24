@@ -2,18 +2,24 @@
 
 namespace SilverCommerce\ContactAdmin\Admin;
 
+use SilverStripe\Forms\TextField;
 use Silverstripe\Admin\ModelAdmin;
 use SilverStripe\Dev\CsvBulkLoader;
+use SilverStripe\TagField\TagField;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Config\Config;
 use Colymba\BulkManager\BulkManager;
 use SilverStripe\Forms\CheckboxField;
+use TractorCow\AutoComplete\AutoCompleteField;
 use SilverCommerce\ContactAdmin\Model\Contact;
-use SilverCommerce\ContactAdmin\Model\ContactTag;
 use Colymba\BulkManager\BulkAction\UnlinkHandler;
+use SilverCommerce\ContactAdmin\Model\ContactTag;
 use SilverCommerce\ContactAdmin\Model\ContactList;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverCommerce\ContactAdmin\BulkActions\AddTagsHandler;
 use SilverCommerce\ContactAdmin\BulkActions\AddToListHandler;
+use SilverCommerce\ContactAdmin\Forms\ModelAdminAutoCompleteField;
 
 /**
  * Management interface for contacts
@@ -40,6 +46,10 @@ class ContactAdmin extends ModelAdmin
         Contact::class => CSVBulkLoader::class,
         ContactTag::class => CSVBulkLoader::class,
         ContactList::class => CSVBulkLoader::class
+    ];
+
+    private static $allowed_actions = [
+        "SearchForm"
     ];
 
     public $showImportForm = [
@@ -106,6 +116,60 @@ class ContactAdmin extends ModelAdmin
         $config->addComponents($manager);
 
         $this->extend("updateEditForm", $form);
+
+        return $form;
+    }
+
+    public function SearchForm()
+    {
+        $form = parent::SearchForm();
+        $fields = $form->Fields();
+
+        if ($this->modelClass == Contact::class) {
+            $contacts = Contact::get();
+            $config = Contact::config();
+            $has_one = $config->has_one;
+            $has_many = $config->has_many;
+            $many_many = $config->many_many;
+            $belongs_many_many = $config->belongs_many_many;
+            $associations = array_merge(
+                $has_one,
+                $has_many,
+                $many_many,
+                $belongs_many_many
+            );
+
+            foreach ($fields as $field) {
+                if ($field instanceof TextField) {
+                    $name = $field->getName();
+                    $title = $field->Title();
+                    $db_field = str_replace(["q[", "]"], "", $name);
+                    $class = $this->modelClass;
+
+                    // If this is a relation, switch class name
+                    if (strpos($name, "__")) {
+                        $parts = explode("__", $db_field);
+                        $class = $associations[$parts[0]];
+                        $db_field = $parts[1];
+                    }
+
+                    $fields->replaceField(
+                        $name,
+                        ModelAdminAutoCompleteField::create(
+                            $name,
+                            $title,
+                            $field->Value(),
+                            $class,
+                            $db_field
+                        )->setForm($form)
+                        ->setDisplayField($db_field)
+                        ->setLabelField($db_field)
+                        ->setStoredField($db_field)
+                    );
+                }
+            }
+
+        }
 
         return $form;
     }

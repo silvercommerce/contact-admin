@@ -32,3 +32,7 @@
 ## 1.1.0
 
 * Update to work with latest bulk manager
+
+## 1.1.1
+
+* Add autocomplete fields for searchform in ContactAdmin
