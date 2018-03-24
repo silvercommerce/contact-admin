@@ -146,7 +146,7 @@ class AddToListHandler extends AddRelatedHandler
     /**
      * Saves the changes made in the bulk edit into the dataObject
      * 
-     * @return Redirect 
+     * @return HTTPResponse 
      */
     public function doAddToList($data, /** @scrutinizer ignore-unused */ $form)
     {
@@ -179,7 +179,7 @@ class AddToListHandler extends AddRelatedHandler
             }
         } catch (\Exception $e) {
             $form->sessionMessage(
-                $e->getResult()->message(),
+                $e->getMessage(),
                 ValidationResult::TYPE_ERROR
             );
                 
