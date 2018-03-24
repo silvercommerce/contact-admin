@@ -126,7 +126,6 @@ class ContactAdmin extends ModelAdmin
         $fields = $form->Fields();
 
         if ($this->modelClass == Contact::class) {
-            $contacts = Contact::get();
             $config = Contact::config();
             $has_one = $config->has_one;
             $has_many = $config->has_many;
@@ -156,7 +155,7 @@ class ContactAdmin extends ModelAdmin
                     $fields->replaceField(
                         $name,
                         ModelAdminAutoCompleteField::create(
-                            $name,
+                            /** @scrutinizer ignore-type */ $name,
                             $title,
                             $field->Value(),
                             $class,

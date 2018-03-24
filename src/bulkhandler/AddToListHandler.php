@@ -148,7 +148,7 @@ class AddToListHandler extends AddRelatedHandler
      * 
      * @return Redirect 
      */
-    public function doAddToList($data, $form)
+    public function doAddToList($data, /** @scrutinizer ignore-unused */ $form)
     {
         $className  = $this->gridField->list->dataClass;
         $controller = $this->getToplevelController();

@@ -151,7 +151,7 @@ class AddTagsHandler extends AddRelatedHandler
      * 
      * @return Redirect 
      */
-    public function doAddTags($data, $form)
+    public function doAddTags($data, /** @scrutinizer ignore-unused */ $form)
     {
         $className  = $this->gridField->list->dataClass;
         $controller = $this->getToplevelController();
