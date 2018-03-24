@@ -36,3 +36,4 @@
 ## 1.1.1
 
 * Add autocomplete fields for searchform in ContactAdmin
+* Some minor code cleanup

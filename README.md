@@ -1,12 +1,16 @@
 Silverstripe Contact Management Module
 ======================================
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/silvercommerce/contact-admin/badges/quality-score.png?b=1.0)](https://scrutinizer-ci.com/g/silvercommerce/contact-admin/?branch=1.0)
+
 Module that allows users to create, manage, group and bulk import/export
 contacts.
 
 These contacts are generic objects and so are designed to be extended on
 (for example assigning to mailing lists, orders, quotes, etc).
 
+Also adds autocomplete based filtering to the contact admin interface for easier
+searching of records.
 
 ## Author
 This module was created by [i-lateral](http://www.i-lateral.com).
