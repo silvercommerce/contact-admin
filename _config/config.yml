@@ -4,3 +4,6 @@ Name: contactsconfig
 SilverStripe\Admin\LeftAndMain:
   extensions:
     - SilverCommerce\ContactAdmin\Extensions\ContactsAdminExtension
+SilverStripe\Security\Member:
+  extensions:
+    - SilverCommerce\ContactAdmin\Extensions\MemberExtension

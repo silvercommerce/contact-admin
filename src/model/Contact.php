@@ -6,6 +6,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\TagField\TagField;
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\Security\Permission;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\GridField\GridField;
@@ -13,6 +14,7 @@ use SilverStripe\Security\PermissionProvider;
 use SilverCommerce\ContactAdmin\Model\ContactTag;
 use SilverStripe\ORM\FieldType\DBHTMLText as HTMLText;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use NathanCox\HasOneAutocompleteField\Forms\HasOneAutocompleteField;
 
 /**
  * Details on a particular contact
@@ -33,9 +35,7 @@ class Contact extends DataObject implements PermissionProvider
     private static $list_seperator = ", ";
 
     private static $db = [
-        "Salutation" => "Varchar(20)",
         "FirstName" => "Varchar(255)",
-        "MiddleName" => "Varchar(255)",
         "Surname" => "Varchar(255)",
         "Company" => "Varchar(255)",
         "Phone" => "Varchar(15)",
@@ -43,7 +43,11 @@ class Contact extends DataObject implements PermissionProvider
         "Email" => "Varchar(255)",
         "Source" => "Text"
     ];
-    
+
+    private static $has_one = [
+        "Member" => Member::class
+    ];
+
     private static $has_many = [
         "Locations" => ContactLocation::class,
         "Notes" => ContactNote::class
@@ -82,9 +86,7 @@ class Contact extends DataObject implements PermissionProvider
     ];
     
     private static $searchable_fields = [
-        "Salutation",
         "FirstName",
-        "MiddleName",
         "Surname",
         "Email",
         "Locations.Address1",
@@ -95,31 +97,38 @@ class Contact extends DataObject implements PermissionProvider
         "Tags.Title",
         "Lists.Title"
     ];
+
+    /**
+     * Fields that can be synced with associated member
+     * 
+     * @var array
+     */
+    private static $sync_fields = [
+        "FirstName",
+        "Surname",
+        "Company",
+        "Phone",
+        "Mobile",
+        "Email"
+    ];
     
     public function getTitle()
     {
-        $t = '';
-        if (!empty($this->Salutation)) {
-            $t = "$this->Salutation ";
-        }
-        $f = '';
+        $parts = [];
+
         if (!empty($this->FirstName)) {
-            $f = "$this->FirstName ";
-        }
-        $m = '';
-        if (!empty($this->MiddleName)) {
-            $m = "$this->MiddleName ";
-        }
-        $s = '';
-        if (!empty($this->Surname)) {
-            $s = "$this->Surname ";
-        }
-        $e = '';
-        if (!empty($this->Email)) {
-            $e = "($this->Email)";
+            $parts[] = $this->FirstName;
         }
 
-        $title = $t.$f.$m.$s.$e;
+        if (!empty($this->Surname)) {
+            $parts[] = $this->Surname;
+        }
+
+        if (!empty($this->Email)) {
+            $parts[] = "($this->Email)";
+        }
+
+        $title = implode(" ", $parts);
 
         $this->extend("updateTitle", $title);
         
@@ -128,16 +137,17 @@ class Contact extends DataObject implements PermissionProvider
 
     public function getFullName() 
     {
-		$t = '';
-		if (!empty($this->Salutation)) $t = "$this->Salutation ";
-        	$f = '';
-		if (!empty($this->FirstName)) $f = "$this->FirstName ";
-		$m = '';
-		if (!empty($this->MiddleName)) $m = "$this->MiddleName ";
-		$s = '';
-		if (!empty($this->Surname)) $s = "$this->Surname ";
-        
-        $name = $t.' '.$f.' '.$m.' '.$s;
+        $parts = [];
+
+        if (!empty($this->FirstName)) {
+            $parts[] = $this->FirstName;
+        }
+
+		if (!empty($this->Surname)) {
+            $parts[] = $this->Surname;
+        }
+
+        $name = implode(" ", $parts);
         
         $this->extend("updateFullName", $name);
 
@@ -254,6 +264,35 @@ class Contact extends DataObject implements PermissionProvider
         return $flagged;
     }
     
+    /**
+     * Update an associated member with the data from this contact
+     * 
+     * @return void
+     */
+    public function syncToMember()
+    {
+        $member = $this->Member();
+        $sync = $this->config()->sync_fields;
+        $write = false;
+
+        if (!$member->exists()) {
+            return;
+        }
+
+        foreach ($this->getChangedFields() as $field => $change) {
+            // If this field is a field to sync, and it is different
+            // then update member
+            if (in_array($field, $sync) && $member->$field != $this->$field) {
+                $member->$field = $this->$field;
+                $write = true;
+            }
+        }
+
+        if ($write) {
+            $member->write();
+        }
+    }
+
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -288,11 +327,22 @@ class Contact extends DataObject implements PermissionProvider
             );
         }
         
-        $fields->addFieldToTab(
+        $fields->addFieldsToTab(
             "Root.Main",
-            $tag_field
+            [
+                $member_field = HasOneAutocompleteField::create(
+                    'MemberID',
+                    _t(
+                        'SilverCommerce\ContactAdmin.LinkContactToAccount',
+                        'Link this contact to a user account?'
+                    ),
+                    Member::class,
+                    'Title'
+                ),
+                $tag_field
+            ]
         );
-        
+
         return $fields;
     }
     
@@ -406,6 +456,18 @@ class Contact extends DataObject implements PermissionProvider
         }
 
         return false;
+    }
+
+    /**
+     * Sync to associated member (if needed)
+     * 
+     * @return void
+     */
+    public function onAfterWrite()
+    {
+        parent::onAfterWrite();
+
+        $this->syncToMember();
     }
 
     /**
