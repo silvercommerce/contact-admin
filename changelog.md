@@ -37,3 +37,9 @@
 
 * Add autocomplete fields for searchform in ContactAdmin
 * Some minor code cleanup
+
+## 1.2.0
+
+* Allow associating a `Contact` to a `Member`
+* Remove `Salutation` and `Middlename` from a `Contact`
+* Add versioning support to a `Contact`
