@@ -39,7 +39,17 @@ class ContactLocation extends DataObject implements PermissionProvider
         "Title" => "Varchar",
         "Address" => "Text"
     ];
-    
+
+    private static $frontend_fields = [
+        "Address1",
+        "Address2",
+        "City",
+        "County",
+        "Country",
+        "PostCode",
+        "Default"
+    ];
+
     private static $summary_fields = [
         "Address1",
         "Address2",
