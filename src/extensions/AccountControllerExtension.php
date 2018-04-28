@@ -54,7 +54,7 @@ class AccountControllerExtension extends Extension
         $member = Security::getCurrentUser();
 
         $this
-            ->owner
+            ->getOwner()
             ->customise([
                 "Title" => _t(
                     "SilverCommerce\ContactAdmin.YourAddresses",
@@ -64,16 +64,16 @@ class AccountControllerExtension extends Extension
                     "SilverCommerce\ContactAdmin.YourAddresses",
                     "Your Addresses"
                 ),
-                "Content" => $this->owner->renderWith(
+                "Content" => $this->getOwner()->renderWith(
                     "SilverCommerce\\ContactAdmin\\Includes\\Addresses",
                     ["Contact" => $member->Contact()]
                 )
             ]);
 
-        $this->owner->extend("updateAddresses");
+        $this->getOwner()->extend("updateAddresses");
 
         return $this
-            ->owner
+            ->getOwner()
             ->renderWith([
                 'AccountController_addresses',
                 AccountController::class . '_addresses',
@@ -90,7 +90,7 @@ class AccountControllerExtension extends Extension
      */
     public function addaddress()
     {
-        $form = $this->AddressForm();
+        $form = $this->getOwner()->AddressForm();
         $member = Security::getCurrentUser();
 
         $form
@@ -99,7 +99,7 @@ class AccountControllerExtension extends Extension
             ->setValue($member->Contact()->ID);
 
         $this
-            ->owner
+            ->getOwner()
             ->customise([
                 "Title" => _t(
                     "SilverCommerce\ContactAdmin.AddAddress",
@@ -112,10 +112,10 @@ class AccountControllerExtension extends Extension
                 "Form" => $form
             ]);
 
-        $this->owner->extend("updateAddAddress");
+        $this->getOwner()->extend("updateAddAddress");
 
         return $this
-            ->owner
+            ->getOwner()
             ->renderWith([
                 'AccountController_addaddress',
                 AccountController::class . '_addaddress',
@@ -133,7 +133,7 @@ class AccountControllerExtension extends Extension
     public function editaddress()
     {
         $member = Security::getCurrentUser();
-        $id = $this->owner->request->param("ID");
+        $id = $this->getOwner()->request->param("ID");
         $address = ContactLocation::get()->byID($id);
 
         if ($address && $address->canEdit($member)) {
@@ -145,7 +145,7 @@ class AccountControllerExtension extends Extension
                 ->setTitle(_t("SilverCommerce\ContactAdmin.Save", "Save"));
 
             $this
-                ->owner
+                ->getOwner()
                 ->customise([
                     "Title" => _t(
                         "SilverCommerce\ContactAdmin.EditAddress",
@@ -158,10 +158,10 @@ class AccountControllerExtension extends Extension
                     "Form" => $form
                 ]);
 
-            $this->owner->extend("updateEditAddress");
+            $this->getOwner()->extend("updateEditAddress");
             
             return $this
-                ->owner
+                ->getOwner()
                 ->renderWith([
                     'AccountController_editaddress',
                     AccountController::class . '_editaddress',
@@ -170,7 +170,7 @@ class AccountControllerExtension extends Extension
                     'Page'
                 ]);
         } else {
-            return $this->owner->httpError(404);
+            return $this->getOwner()->httpError(404);
         }
     }
 
@@ -182,7 +182,7 @@ class AccountControllerExtension extends Extension
     public function removeaddress()
     {
         $member = Security::getCurrentUser();
-        $id = $this->owner->request->param("ID");
+        $id = $this->getOwner()->request->param("ID");
         $address = ContactLocation::get()->byID($id);
 
         if ($address && $address->canDelete($member)) {
@@ -200,10 +200,10 @@ class AccountControllerExtension extends Extension
                     )
                 ]);
 
-            $this->owner->extend("updateEditAddress");
+            $this->getOwner()->extend("updateEditAddress");
 
             return $this
-                ->owner
+                ->getOwner()
                 ->renderWith([
                     'AccountController_removeaddress',
                     AccountController::class . '_removeaddress',
@@ -212,7 +212,7 @@ class AccountControllerExtension extends Extension
                     'Page'
                 ]);
         } else {
-            return $this->owner->httpError(404);
+            return $this->getOwner()->httpError(404);
         }
     }
 
@@ -246,13 +246,13 @@ class AccountControllerExtension extends Extension
         );
 
         $back_btn = '<a href="';
-        $back_btn .= $this->owner->Link('addresses');
+        $back_btn .= $this->getOwner()->Link('addresses');
         $back_btn .= '" class="btn btn-link">';
         $back_btn .= _t('SilverCommerce\ContactAdmin.Cancel', 'Cancel');
         $back_btn .= '</a>';
 
         $form = Form::create(
-            $this->owner,
+            $this->getOwner(),
             "AddressForm",
             $fields,
             FieldList::create(
@@ -277,7 +277,7 @@ class AccountControllerExtension extends Extension
             )
         );
 
-        $this->owner->extend("updateAddressForm", $form);
+        $this->getOwner()->extend("updateAddressForm", $form);
 
         return $form;
     }
@@ -312,7 +312,9 @@ class AccountControllerExtension extends Extension
                 ValidationResult::TYPE_ERROR
             );
         }
-        return $this->owner->redirect($this->owner->Link("addresses"));
+        return $this
+            ->getOwner()
+            ->redirect($this->getOwner()->Link("addresses"));
     }
 
     /**
@@ -330,7 +332,7 @@ class AccountControllerExtension extends Extension
         $menu->add(ArrayData::create([
             "ID"    => 11,
             "Title" => _t('SilverCommerce\ContactAdmin.Addresses', 'Addresses'),
-            "Link"  => $this->owner->Link("addresses"),
+            "Link"  => $this->getOwner()->Link("addresses"),
             "LinkingMode" => ($curr_action == "addresses") ? "current" : "link"
         ]));
     }
