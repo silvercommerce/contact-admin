@@ -8,6 +8,7 @@ use SilverStripe\Security\Security;
 use SilverStripe\TagField\TagField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Security\Permission;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Security\PermissionProvider;
@@ -15,6 +16,7 @@ use SilverCommerce\ContactAdmin\Model\ContactTag;
 use SilverStripe\ORM\FieldType\DBHTMLText as HTMLText;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use NathanCox\HasOneAutocompleteField\Forms\HasOneAutocompleteField;
+use SilverCommerce\VersionHistoryField\Forms\VersionHistoryField;
 
 /**
  * Details on a particular contact
@@ -96,6 +98,26 @@ class Contact extends DataObject implements PermissionProvider
         "Locations.PostCode",
         "Tags.Title",
         "Lists.Title"
+    ];
+
+    /**
+     * Add extension classes
+     *
+     * @var array
+     * @config
+     */
+    private static $extensions = [
+        Versioned::class . '.versioned',
+    ];
+
+    /**
+     * Declare version history
+     *
+     * @var array
+     * @config
+     */
+    private static $versioning = [
+        "History"
     ];
 
     /**
@@ -295,55 +317,65 @@ class Contact extends DataObject implements PermissionProvider
 
     public function getCMSFields()
     {
-        $fields = parent::getCMSFields();
-        
-        $fields->removeByName("Tags");
-        $fields->removeByName("Notes");
-        
-        $tag_field = TagField::create(
-            'Tags',
-            null,
-            ContactTag::get(),
-            $this->Tags()
-        )->setRightTitle(_t(
-            "Contacts.TagDescription",
-            "List of tags related to this contact, seperated by a comma."
-        ))->setShouldLazyLoad(true);
-        
-        if ($this->ID) {
-            $gridField = GridField::create(
-                'Notes',
-                'Notes',
-                $this->Notes()
-            );
+        $self = $this;
+        $this->beforeUpdateCMSFields(function ($fields) use ($self) {
+            $fields->removeByName("Tags");
+            $fields->removeByName("Notes");
             
-            $config = GridFieldConfig_RelationEditor::create();
+            $tag_field = TagField::create(
+                'Tags',
+                null,
+                ContactTag::get(),
+                $self->Tags()
+            )->setRightTitle(_t(
+                "Contacts.TagDescription",
+                "List of tags related to this contact, seperated by a comma."
+            ))->setShouldLazyLoad(true);
+            
+            if ($self->exists()) {
+                $gridField = GridField::create(
+                    'Notes',
+                    'Notes',
+                    $self->Notes()
+                );
+                
+                $config = GridFieldConfig_RelationEditor::create();
 
-            $gridField->setConfig($config);
+                $gridField->setConfig($config);
 
-            $fields->addFieldToTab(
-                "Root.Notes",
-                $gridField
-            );
-        }
-        
-        $fields->addFieldsToTab(
-            "Root.Main",
-            [
-                $member_field = HasOneAutocompleteField::create(
-                    'MemberID',
-                    _t(
-                        'SilverCommerce\ContactAdmin.LinkContactToAccount',
-                        'Link this contact to a user account?'
+                $fields->addFieldToTab(
+                    "Root.Notes",
+                    $gridField
+                );
+
+                $fields->addFieldToTab(
+                    "Root.History",
+                    VersionHistoryField::create(
+                        "History",
+                        _t("SilverCommerce\VersionHistoryField.History", "History"),
+                        $self
+                    )->addExtraClass("stacked")
+                );
+            }
+            
+            $fields->addFieldsToTab(
+                "Root.Main",
+                [
+                    $member_field = HasOneAutocompleteField::create(
+                        'MemberID',
+                        _t(
+                            'SilverCommerce\ContactAdmin.LinkContactToAccount',
+                            'Link this contact to a user account?'
+                        ),
+                        Member::class,
+                        'Title'
                     ),
-                    Member::class,
-                    'Title'
-                ),
-                $tag_field
-            ]
-        );
+                    $tag_field
+                ]
+            );
+        });
 
-        return $fields;
+        return parent::getCMSFields();
     }
     
     public function getCMSValidator()

@@ -3,13 +3,15 @@
 namespace SilverCommerce\ContactAdmin\Model;
 
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\FieldType\DBHTMLText as HTMLText;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
-use SilverStripe\Security\PermissionProvider;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Security\PermissionProvider;
+use SilverStripe\ORM\FieldType\DBHTMLText as HTMLText;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverCommerce\VersionHistoryField\Forms\VersionHistoryField;
 
 /**
  * Details on a particular contact
@@ -60,6 +62,26 @@ class ContactLocation extends DataObject implements PermissionProvider
         "Default"
     ];
 
+    /**
+     * Add extension classes
+     *
+     * @var array
+     * @config
+     */
+    private static $extensions = [
+        Versioned::class . '.versioned',
+    ];
+
+    /**
+     * Declare version history
+     *
+     * @var array
+     * @config
+     */
+    private static $versioning = [
+        "History"
+    ];
+
     public function getTitle()
     {
         $title = $this->Address1 . " (" . $this->PostCode . ")";
@@ -90,8 +112,27 @@ class ContactLocation extends DataObject implements PermissionProvider
         $this->extend("updateAddress", $return);
         
 		return implode(",\n", $return);
-	}
+    }
     
+    public function getCMSFields()
+    {
+        $self = $this;
+        $this->beforeUpdateCMSFields(function ($fields) use ($self) {
+            if ($self->exists()) {
+                $fields->addFieldToTab(
+                    "Root.History",
+                    VersionHistoryField::create(
+                        "History",
+                        _t("SilverCommerce\VersionHistoryField.History", "History"),
+                        $this
+                    )->addExtraClass("stacked")
+                );
+            }
+        });
+
+        return parent::getCMSFields();
+    }
+
     public function getCMSValidator()
     {
         return new RequiredFields(array(

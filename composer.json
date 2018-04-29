@@ -22,7 +22,8 @@
         "colymba/gridfield-bulk-editing-tools": "^3.0",
         "silverstripe/tagfield": "^2.0",
         "tractorcow/silverstripe-autocomplete": "^4.0",
-        "nathancox/hasoneautocompletefield": "^2.0"
+        "nathancox/hasoneautocompletefield": "^2.0",
+        "silvercommerce/versionhistoryfield": "^1"
     },
     "replace": {
         "i-lateral/silverstripe-contacts": "self.version"

@@ -42,4 +42,4 @@
 
 * Allow associating a `Contact` to a `Member`
 * Remove `Salutation` and `Middlename` from a `Contact`
-* Add versioning support to a `Contact`
+* Add versioning support to a `Contact` and `ContactLocation`
