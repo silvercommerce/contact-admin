@@ -43,3 +43,9 @@
 * Allow associating a `Contact` to a `Member`
 * Remove `Salutation` and `Middlename` from a `Contact`
 * Add versioning support to a `Contact` and `ContactLocation`
+
+## 1.2.1
+
+* Automatically add region selection field if GeoLocations module is installed
+* Hide Version field
+* 

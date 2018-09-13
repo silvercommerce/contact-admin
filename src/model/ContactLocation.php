@@ -27,8 +27,8 @@ class ContactLocation extends DataObject implements PermissionProvider
         "Address1" => "Varchar(255)",
         "Address2" => "Varchar(255)",
         "City" => "Varchar(255)",
-        "County" => "Varchar(255)",
         "Country" => "Varchar(255)",
+        "County" => "Varchar(255)",
         "PostCode" => "Varchar(10)",
         "Default" => "Boolean"
     ];
@@ -46,8 +46,8 @@ class ContactLocation extends DataObject implements PermissionProvider
         "Address1",
         "Address2",
         "City",
-        "County",
         "Country",
+        "County",
         "PostCode",
         "Default"
     ];

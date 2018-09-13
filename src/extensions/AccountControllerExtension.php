@@ -13,6 +13,7 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Security;
+use SilverStripe\Control\Controller;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
@@ -21,6 +22,7 @@ use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Core\Injector\Injector;
 use SilverCommerce\ContactAdmin\Model\ContactLocation;
+use SilverCommerce\GeoZones\Forms\RegionSelectionField;
 use ilateral\SilverStripe\Users\Control\AccountController;
 
 /**
@@ -216,7 +218,7 @@ class AccountControllerExtension extends Extension
         }
     }
 
-        /**
+    /**
      * Form used for adding or editing addresses
      *
      * @return Form
@@ -231,6 +233,9 @@ class AccountControllerExtension extends Extension
 
         $fields->merge($location->getFrontEndFields());
 
+        // Remove the version field
+        $fields->removeByName("Version");
+
         $fields->replaceField(
             "Country",
             DropdownField::create(
@@ -239,6 +244,17 @@ class AccountControllerExtension extends Extension
                 i18n::getData()->getCountries()
             )->setEmptyString("")
         );
+
+        if (class_exists(RegionSelectionField::class)) {
+            $fields->replaceField(
+                "County",
+                RegionSelectionField::create(
+                    "County",
+                    $location->fieldLabel("County"),
+                    "Country"
+                )
+            );
+        }
 
         $fields->replaceField(
             "ContactID",
@@ -294,8 +310,10 @@ class AccountControllerExtension extends Extension
     public function doSaveAddress($data, $form)
     {
         if (!$data["ID"]) {
+            $new = true;
             $address = ContactLocation::create();
         } else {
+            $new = false;
             $address = ContactLocation::get()->byID($data["ID"]);
         }
 
@@ -312,9 +330,22 @@ class AccountControllerExtension extends Extension
                 ValidationResult::TYPE_ERROR
             );
         }
-        return $this
-            ->getOwner()
-            ->redirect($this->getOwner()->Link("addresses"));
+
+        // If a new record, redirect to base, else redirect back to the edit form
+        if ($new && !empty($address)) {
+            return $this
+                ->getOwner()
+                ->redirect(
+                    Controller::join_links(
+                        $this->getOwner()->Link("editaddress"),
+                        $address->ID
+                    )
+                );
+        } else {
+            return $this
+                ->getOwner()
+                ->redirectBack();
+        }
     }
 
     /**
