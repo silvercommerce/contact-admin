@@ -3,7 +3,6 @@
 namespace SilverCommerce\ContactAdmin\Admin;
 
 use SilverStripe\Forms\TextField;
-use Silverstripe\Admin\ModelAdmin;
 use SilverStripe\Dev\CsvBulkLoader;
 use SilverStripe\TagField\TagField;
 use SilverStripe\Control\Controller;
@@ -20,6 +19,7 @@ use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverCommerce\ContactAdmin\BulkActions\AddTagsHandler;
 use SilverCommerce\ContactAdmin\BulkActions\AddToListHandler;
 use SilverCommerce\ContactAdmin\Forms\ModelAdminAutoCompleteField;
+use ilateral\SilverStripe\ModelAdminPlus\ModelAdminPlus;
 
 /**
  * Management interface for contacts
@@ -27,7 +27,7 @@ use SilverCommerce\ContactAdmin\Forms\ModelAdminAutoCompleteField;
  * @author ilateral
  * @package Contacts
  */
-class ContactAdmin extends ModelAdmin
+class ContactAdmin extends ModelAdminPlus
 {
     
     private static $menu_priority = 0;
@@ -101,19 +101,12 @@ class ContactAdmin extends ModelAdmin
         $config = $gridField->getConfig();
 
         // Add bulk editing to gridfield
-        $manager = new BulkManager();
-        $manager->removeBulkAction(UnlinkHandler::class);
+        $manager = $config->getComponentByType(BulkManager::class);
 
         if ($this->modelClass == Contact::class) {
             $manager->addBulkAction(AddTagsHandler::class);
             $manager->addBulkAction(AddToListHandler::class);
-        } else {
-            $config
-                ->removeComponentsByType(GridFieldExportButton::class)
-                ->removeComponentsByType(GridFieldPrintButton::class);
         }
-
-        $config->addComponents($manager);
 
         $this->extend("updateEditForm", $form);
 
@@ -154,7 +147,7 @@ class ContactAdmin extends ModelAdmin
 
                     $fields->replaceField(
                         $name,
-                        ModelAdminAutoCompleteField::create(
+                        AutoCompleteField::create(
                             /** @scrutinizer ignore-type */ $name,
                             $title,
                             $field->Value(),

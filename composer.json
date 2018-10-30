@@ -23,7 +23,8 @@
         "silverstripe/tagfield": "^2.0",
         "tractorcow/silverstripe-autocomplete": "^4.0",
         "nathancox/hasoneautocompletefield": "^2.0",
-        "silvercommerce/versionhistoryfield": "^1"
+        "silvercommerce/versionhistoryfield": "^1",
+        "i-lateral/silverstripe-modeladminplus": "^1"
     },
     "replace": {
         "i-lateral/silverstripe-contacts": "self.version"
