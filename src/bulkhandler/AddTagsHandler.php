@@ -48,6 +48,16 @@ class AddTagsHandler extends AddRelatedHandler
     ];
 
     /**
+     * Return i18n localized front-end label
+     *
+     * @return array
+     */
+    public function getI18nLabel()
+    {
+        return _t(__CLASS__ . '.Label', $this->getLabel());
+    }
+
+    /**
      * Creates and return the editing interface
      * 
      * @return string Form's HTML
