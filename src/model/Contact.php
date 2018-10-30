@@ -380,10 +380,14 @@ class Contact extends DataObject implements PermissionProvider
     
     public function getCMSValidator()
     {
-        return new RequiredFields(array(
+        $validator = new RequiredFields(array(
             "FirstName",
             "Surname"
         ));
+
+        $this->extend('updateCMSValidator', $validator);
+
+        return $validator;
     }
     
     public function providePermissions()

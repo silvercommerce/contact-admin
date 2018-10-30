@@ -48,4 +48,8 @@
 
 * Automatically add region selection field if GeoLocations module is installed
 * Hide Version field
-* 
+
+## 1.2.2
+
+* Switch top using `ModelAdminPlus`
+* Add extension hook to required fields
