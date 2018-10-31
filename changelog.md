@@ -53,3 +53,7 @@
 
 * Switch top using `ModelAdminPlus`
 * Add extension hook to required fields
+
+## 1.2.3
+
+* Remove AutoCompleteFields (this is now managed via `ModelAdminPlus`)
