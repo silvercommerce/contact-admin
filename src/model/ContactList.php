@@ -4,9 +4,11 @@ namespace SilverCommerce\ContactAdmin\Model;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
+use Colymba\BulkManager\BulkManager;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionProvider;
-use Colymba\BulkManager\BulkManager;
+use Colymba\BulkManager\BulkAction\EditHandler;
+use Colymba\BulkManager\BulkAction\DeleteHandler;
 
 /**
  * A container for grouping contacts
@@ -58,8 +60,8 @@ class ContactList extends DataObject implements PermissionProvider
 
         if ($contacts_field) {
             $manager = new BulkManager();
-            $manager->removeBulkAction("delete");
-            $manager->removeBulkAction("bulkEdit");
+            $manager->removeBulkAction(DeleteHandler::class);
+            $manager->removeBulkAction(EditHandler::class);
             
             $config = $contacts_field->getConfig();
             $config->addComponent($manager);

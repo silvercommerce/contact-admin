@@ -57,3 +57,7 @@
 ## 1.2.3
 
 * Remove AutoCompleteFields (this is now managed via `ModelAdminPlus`)
+
+## 1.2.4
+
+* Update bulk actions on tags and lists inline with `BulkHandler`
