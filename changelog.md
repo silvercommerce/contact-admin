@@ -61,3 +61,8 @@
 ## 1.2.4
 
 * Update bulk actions on tags and lists inline with `BulkHandler`
+
+## 1.2.5
+
+* Fix flagged filter (LT SS4.3)
+* Update model docs
