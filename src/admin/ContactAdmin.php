@@ -2,23 +2,14 @@
 
 namespace SilverCommerce\ContactAdmin\Admin;
 
-use SilverStripe\Forms\TextField;
 use SilverStripe\Dev\CsvBulkLoader;
-use SilverStripe\TagField\TagField;
-use SilverStripe\Control\Controller;
-use SilverStripe\Core\Config\Config;
 use Colymba\BulkManager\BulkManager;
 use SilverStripe\Forms\CheckboxField;
-use TractorCow\AutoComplete\AutoCompleteField;
 use SilverCommerce\ContactAdmin\Model\Contact;
-use Colymba\BulkManager\BulkAction\UnlinkHandler;
 use SilverCommerce\ContactAdmin\Model\ContactTag;
 use SilverCommerce\ContactAdmin\Model\ContactList;
-use SilverStripe\Forms\GridField\GridFieldPrintButton;
-use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverCommerce\ContactAdmin\BulkActions\AddTagsHandler;
 use SilverCommerce\ContactAdmin\BulkActions\AddToListHandler;
-use SilverCommerce\ContactAdmin\Forms\ModelAdminAutoCompleteField;
 use ilateral\SilverStripe\ModelAdminPlus\ModelAdminPlus;
 
 /**
@@ -70,7 +61,12 @@ class ContactAdmin extends ModelAdminPlus
         if ($this->modelClass == Contact::class) {
             $context
                 ->getFields()
-                ->push(new CheckboxField('q[Flagged]', _t("Contacts.ShowFlaggedOnly", 'Show flagged only')));
+                ->push(
+                    CheckboxField::create(
+                        'q[Flagged]',
+                        _t("Contacts.ShowFlaggedOnly", 'Show flagged only')
+                    )
+                );
         }
 
         return $context;
@@ -81,13 +77,18 @@ class ContactAdmin extends ModelAdminPlus
         $list = parent::getList();
 
         // use this to access search parameters
-        $params = $this->request->requestVar('q');
+        $params = $this->getSearchData();
 
         if ($this->modelClass == Contact::class && isset($params['Flagged']) && $params['Flagged']) {
-            $list = $list->filter(
-                "Notes.Flag",
-                true
-            );
+            // Find flagged contacts and ensure that we return a DataList
+            // (not an arraylist)
+            $ids = $list->filterByCallback(
+                function ($item, $list) {
+                    return $item->getFlagged();
+                }
+            )->column("ID");
+
+            $list = Contact::get()->filter("ID", $ids);
         }
 
         return $list;
