@@ -13,6 +13,10 @@ use Colymba\BulkManager\BulkAction\DeleteHandler;
 /**
  * A tag for keyword descriptions of a contact.
  *
+ * @property string Title
+ *
+ * @method \SilverStripe\ORM\ManyManyList Contacts
+ *
  * @package silverstripe
  * @subpackage contacts
  */

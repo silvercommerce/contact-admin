@@ -12,6 +12,10 @@ use Colymba\BulkManager\BulkAction\DeleteHandler;
 
 /**
  * A container for grouping contacts
+ *
+ * @property string Title
+ *
+ * @method \SilverStripe\ORM\ManyManyList Contacts
  * 
  * @author ilateral
  * @package Contacts

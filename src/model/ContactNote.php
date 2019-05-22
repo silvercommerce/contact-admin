@@ -14,6 +14,11 @@ use SilverCommerce\ContactAdmin\Model\ContactTag;
 
 /**
  * Notes on a particular contact
+ *
+ * @property string Content
+ * @property bool   Flag
+ *
+ * @method Contact Contact
  * 
  * @author ilateral
  * @package Contacts

@@ -7,14 +7,23 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Forms\RequiredFields;
-use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Security\PermissionProvider;
-use SilverStripe\ORM\FieldType\DBHTMLText as HTMLText;
-use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverCommerce\VersionHistoryField\Forms\VersionHistoryField;
 
 /**
  * Details on a particular contact
+ *
+ * @property string Title
+ * @property string Address
+ * @property string Address1
+ * @property string Address2
+ * @property string City
+ * @property string Country
+ * @property string County
+ * @property string PostCode
+ * @property bool   Default
+ *
+ * @method Contact Contact
  * 
  * @author ilateral
  * @package Contacts

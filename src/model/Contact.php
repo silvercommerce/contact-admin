@@ -20,7 +20,21 @@ use SilverCommerce\VersionHistoryField\Forms\VersionHistoryField;
 
 /**
  * Details on a particular contact
- * 
+ *
+ * @property string FirstName
+ * @property string Surname
+ * @property string Company
+ * @property string Phone
+ * @property string Mobile
+ * @property string Email
+ * @property string Source
+ * @property bool   Flagged
+ *
+ * @method \SilverStripe\ORM\HasManyList  Locations
+ * @method \SilverStripe\ORM\HasManyList  Notes
+ * @method \SilverStripe\ORM\ManyManyList Tags
+ * @method \SilverStripe\ORM\ManyManyList Lists
+ *
  * @author ilateral
  * @package Contacts
  */
@@ -242,7 +256,6 @@ class Contact extends DataObject implements PermissionProvider
      */
     public function getTagsList()
     {
-        $return = "";
         $tags = $this->Tags()->column("Title");
         
         $this->extend("updateTagsList", $tags);
@@ -427,7 +440,7 @@ class Contact extends DataObject implements PermissionProvider
         }
 
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         if ($member && Permission::checkMember($member->ID, "CONTACTS_MANAGE")) {
