@@ -144,12 +144,16 @@ class ContactLocation extends DataObject implements PermissionProvider
 
     public function getCMSValidator()
     {
-        return new RequiredFields(array(
+        $validaotr = new RequiredFields([
             "Address1",
             "City",
             "Country",
             "PostCode"
-        ));
+        ]);
+
+        $this->extend('updateCMSValidator', $validator);
+
+        return $validator;
     }
     
     public function providePermissions()
