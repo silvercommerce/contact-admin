@@ -146,7 +146,7 @@ class ContactLocation extends DataObject implements PermissionProvider
 
     public function getCMSValidator()
     {
-        $validaotr = new RequiredFields(
+        $validator = new RequiredFields(
             [
             "Address1",
             "City",
