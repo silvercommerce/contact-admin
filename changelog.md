@@ -66,3 +66,7 @@
 
 * Fix flagged filter (LT SS4.3)
 * Update model docs
+
+## 1.2.6
+
+* Add additional extension hook to validator on ContactLocation
