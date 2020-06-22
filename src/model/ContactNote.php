@@ -20,7 +20,7 @@ use SilverCommerce\ContactAdmin\Model\ContactTag;
  *
  * @method Contact Contact
  * 
- * @author ilateral
+ * @author  ilateral
  * @package Contacts
  */
 class ContactNote extends DataObject

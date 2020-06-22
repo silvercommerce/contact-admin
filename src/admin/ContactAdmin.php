@@ -15,7 +15,7 @@ use ilateral\SilverStripe\ModelAdminPlus\ModelAdminPlus;
 /**
  * Management interface for contacts
  * 
- * @author ilateral
+ * @author  ilateral
  * @package Contacts
  */
 class ContactAdmin extends ModelAdminPlus

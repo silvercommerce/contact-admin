@@ -35,7 +35,7 @@ use SilverCommerce\VersionHistoryField\Forms\VersionHistoryField;
  * @method \SilverStripe\ORM\ManyManyList Tags
  * @method \SilverStripe\ORM\ManyManyList Lists
  *
- * @author ilateral
+ * @author  ilateral
  * @package Contacts
  */
 class Contact extends DataObject implements PermissionProvider
@@ -117,7 +117,7 @@ class Contact extends DataObject implements PermissionProvider
     /**
      * Add extension classes
      *
-     * @var array
+     * @var    array
      * @config
      */
     private static $extensions = [
@@ -127,7 +127,7 @@ class Contact extends DataObject implements PermissionProvider
     /**
      * Declare version history
      *
-     * @var array
+     * @var    array
      * @config
      */
     private static $versioning = [
@@ -168,8 +168,8 @@ class Contact extends DataObject implements PermissionProvider
 
         $this->extend("updateTitle", $title);
         
-		return $title;
-	}
+        return $title;
+    }
 
     public function getFullName() 
     {
@@ -179,7 +179,7 @@ class Contact extends DataObject implements PermissionProvider
             $parts[] = $this->FirstName;
         }
 
-		if (!empty($this->Surname)) {
+        if (!empty($this->Surname)) {
             $parts[] = $this->Surname;
         }
 
@@ -188,7 +188,7 @@ class Contact extends DataObject implements PermissionProvider
         $this->extend("updateFullName", $name);
 
         return $name;
-	}
+    }
     
     public function getFlaggedNice()
     {
@@ -235,19 +235,19 @@ class Contact extends DataObject implements PermissionProvider
         }
     }
 
-	/**
-	 * Get the complete name of the member
-	 *
-	 * @return string Returns the first- and surname of the member.
-	 */
-	public function getName() 
+    /**
+     * Get the complete name of the member
+     *
+     * @return string Returns the first- and surname of the member.
+     */
+    public function getName() 
     {
         $name = ($this->Surname) ? trim($this->FirstName . ' ' . $this->Surname) : $this->FirstName;
         
         $this->extend("updateName", $name);
 
         return $name;
-	}
+    }
     
     /**
      * Generate as string of tag titles seperated by a comma
@@ -331,49 +331,52 @@ class Contact extends DataObject implements PermissionProvider
     public function getCMSFields()
     {
         $self = $this;
-        $this->beforeUpdateCMSFields(function ($fields) use ($self) {
-            $fields->removeByName("Tags");
-            $fields->removeByName("Notes");
+        $this->beforeUpdateCMSFields(
+            function ($fields) use ($self) {
+                $fields->removeByName("Tags");
+                $fields->removeByName("Notes");
             
-            $tag_field = TagField::create(
-                'Tags',
-                null,
-                ContactTag::get(),
-                $self->Tags()
-            )->setRightTitle(_t(
-                "Contacts.TagDescription",
-                "List of tags related to this contact, seperated by a comma."
-            ))->setShouldLazyLoad(true);
+                $tag_field = TagField::create(
+                    'Tags',
+                    null,
+                    ContactTag::get(),
+                    $self->Tags()
+                )->setRightTitle(
+                    _t(
+                        "Contacts.TagDescription",
+                        "List of tags related to this contact, seperated by a comma."
+                    )
+                )->setShouldLazyLoad(true);
             
-            if ($self->exists()) {
-                $gridField = GridField::create(
-                    'Notes',
-                    'Notes',
-                    $self->Notes()
-                );
+                if ($self->exists()) {
+                    $gridField = GridField::create(
+                        'Notes',
+                        'Notes',
+                        $self->Notes()
+                    );
                 
-                $config = GridFieldConfig_RelationEditor::create();
+                    $config = GridFieldConfig_RelationEditor::create();
 
-                $gridField->setConfig($config);
+                    $gridField->setConfig($config);
 
-                $fields->addFieldToTab(
-                    "Root.Notes",
-                    $gridField
-                );
+                    $fields->addFieldToTab(
+                        "Root.Notes",
+                        $gridField
+                    );
 
-                $fields->addFieldToTab(
-                    "Root.History",
-                    VersionHistoryField::create(
-                        "History",
-                        _t("SilverCommerce\VersionHistoryField.History", "History"),
-                        $self
-                    )->addExtraClass("stacked")
-                );
-            }
+                    $fields->addFieldToTab(
+                        "Root.History",
+                        VersionHistoryField::create(
+                            "History",
+                            _t("SilverCommerce\VersionHistoryField.History", "History"),
+                            $self
+                        )->addExtraClass("stacked")
+                    );
+                }
             
-            $fields->addFieldsToTab(
-                "Root.Main",
-                [
+                $fields->addFieldsToTab(
+                    "Root.Main",
+                    [
                     $member_field = HasOneAutocompleteField::create(
                         'MemberID',
                         _t(
@@ -384,19 +387,22 @@ class Contact extends DataObject implements PermissionProvider
                         'Title'
                     ),
                     $tag_field
-                ]
-            );
-        });
+                    ]
+                );
+            }
+        );
 
         return parent::getCMSFields();
     }
     
     public function getCMSValidator()
     {
-        $validator = new RequiredFields(array(
+        $validator = new RequiredFields(
+            array(
             "FirstName",
             "Surname"
-        ));
+            )
+        );
 
         $this->extend('updateCMSValidator', $validator);
 
@@ -521,7 +527,6 @@ class Contact extends DataObject implements PermissionProvider
 
     /**
      * Cleanup DB on removal
-     *
      */
     public function onBeforeDelete()
     {

@@ -17,7 +17,7 @@ use Colymba\BulkManager\BulkAction\DeleteHandler;
  *
  * @method \SilverStripe\ORM\ManyManyList Contacts
  *
- * @package silverstripe
+ * @package    silverstripe
  * @subpackage contacts
  */
 class ContactTag extends DataObject implements PermissionProvider

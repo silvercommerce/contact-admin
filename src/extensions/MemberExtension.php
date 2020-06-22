@@ -11,7 +11,7 @@ use SilverStripe\Core\Config\Config;
 /**
  * Add additional settings to a memeber object
  *
- * @package orders-admin
+ * @package    orders-admin
  * @subpackage extensions
  */
 class MemberExtension extends DataExtension

@@ -25,7 +25,7 @@ use SilverCommerce\VersionHistoryField\Forms\VersionHistoryField;
  *
  * @method Contact Contact
  * 
- * @author ilateral
+ * @author  ilateral
  * @package Contacts
  */
 class ContactLocation extends DataObject implements PermissionProvider
@@ -74,7 +74,7 @@ class ContactLocation extends DataObject implements PermissionProvider
     /**
      * Add extension classes
      *
-     * @var array
+     * @var    array
      * @config
      */
     private static $extensions = [
@@ -84,7 +84,7 @@ class ContactLocation extends DataObject implements PermissionProvider
     /**
      * Declare version history
      *
-     * @var array
+     * @var    array
      * @config
      */
     private static $versioning = [
@@ -105,13 +105,13 @@ class ContactLocation extends DataObject implements PermissionProvider
         $return = [];
         $return[] = $this->Address1;
         
-		if (!empty($this->Address2)) {
+        if (!empty($this->Address2)) {
             $return[] = $this->Address2;
         }
         
         $return[] = $this->City;
 
-		if (!empty($this->County)) {
+        if (!empty($this->County)) {
             $return[] = $this->County;
         }
 
@@ -120,36 +120,40 @@ class ContactLocation extends DataObject implements PermissionProvider
 
         $this->extend("updateAddress", $return);
         
-		return implode(",\n", $return);
+        return implode(",\n", $return);
     }
     
     public function getCMSFields()
     {
         $self = $this;
-        $this->beforeUpdateCMSFields(function ($fields) use ($self) {
-            if ($self->exists()) {
-                $fields->addFieldToTab(
-                    "Root.History",
-                    VersionHistoryField::create(
-                        "History",
-                        _t("SilverCommerce\VersionHistoryField.History", "History"),
-                        $this
-                    )->addExtraClass("stacked")
-                );
+        $this->beforeUpdateCMSFields(
+            function ($fields) use ($self) {
+                if ($self->exists()) {
+                    $fields->addFieldToTab(
+                        "Root.History",
+                        VersionHistoryField::create(
+                            "History",
+                            _t("SilverCommerce\VersionHistoryField.History", "History"),
+                            $this
+                        )->addExtraClass("stacked")
+                    );
+                }
             }
-        });
+        );
 
         return parent::getCMSFields();
     }
 
     public function getCMSValidator()
     {
-        $validaotr = new RequiredFields([
+        $validaotr = new RequiredFields(
+            [
             "Address1",
             "City",
             "Country",
             "PostCode"
-        ]);
+            ]
+        );
 
         $this->extend('updateCMSValidator', $validator);
 

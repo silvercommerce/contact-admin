@@ -11,7 +11,6 @@ use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
 /**
  * Abstract(ish) handler class for bulk assigning actions that pre-loads some
  * common functions and properties.
- * 
  */
 class AddRelatedHandler extends BulkActionHandler
 {
@@ -22,10 +21,10 @@ class AddRelatedHandler extends BulkActionHandler
     ];
 
         /**
-     * Whether this handler should be called via an XHR from the front-end
-     * 
-     * @var boolean
-     */
+         * Whether this handler should be called via an XHR from the front-end
+         * 
+         * @var boolean
+         */
     protected $xhr = false;
 
     /**
@@ -38,7 +37,8 @@ class AddRelatedHandler extends BulkActionHandler
 
     /**
      * Return URL to this RequestHandler
-     * @param string $action Action to append to URL
+     *
+     * @param  string $action Action to append to URL
      * @return string URL
      */
     public function Link($action = null)
@@ -90,10 +90,14 @@ class AddRelatedHandler extends BulkActionHandler
         }
 
         $items = Controller::curr()->Breadcrumbs($unlinked);
-        $items->push(ArrayData::create([
-            'Title' => $this->getI18nLabel(),
-            'Link' => false,
-        ]));
+        $items->push(
+            ArrayData::create(
+                [
+                'Title' => $this->getI18nLabel(),
+                'Link' => false,
+                ]
+            )
+        );
 
         return $items;
     }

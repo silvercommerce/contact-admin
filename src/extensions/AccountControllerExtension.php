@@ -57,7 +57,8 @@ class AccountControllerExtension extends Extension
 
         $this
             ->getOwner()
-            ->customise([
+            ->customise(
+                [
                 "Title" => _t(
                     "SilverCommerce\ContactAdmin.YourAddresses",
                     "Your Addresses"
@@ -70,19 +71,22 @@ class AccountControllerExtension extends Extension
                     "SilverCommerce\\ContactAdmin\\Includes\\Addresses",
                     ["Contact" => $member->Contact()]
                 )
-            ]);
+                ]
+            );
 
         $this->getOwner()->extend("updateAddresses");
 
         return $this
             ->getOwner()
-            ->renderWith([
+            ->renderWith(
+                [
                 'AccountController_addresses',
                 AccountController::class . '_addresses',
                 'AccountController',
                 AccountController::class,
                 'Page'
-            ]);
+                ]
+            );
     }
 
     /**
@@ -102,7 +106,8 @@ class AccountControllerExtension extends Extension
 
         $this
             ->getOwner()
-            ->customise([
+            ->customise(
+                [
                 "Title" => _t(
                     "SilverCommerce\ContactAdmin.AddAddress",
                     "Add Address"
@@ -112,19 +117,22 @@ class AccountControllerExtension extends Extension
                     "Add Address"
                 ),
                 "Form" => $form
-            ]);
+                ]
+            );
 
         $this->getOwner()->extend("updateAddAddress");
 
         return $this
             ->getOwner()
-            ->renderWith([
+            ->renderWith(
+                [
                 'AccountController_addaddress',
                 AccountController::class . '_addaddress',
                 'AccountController',
                 AccountController::class,
                 'Page'
-            ]);
+                ]
+            );
     }
 
     /**
@@ -148,7 +156,8 @@ class AccountControllerExtension extends Extension
 
             $this
                 ->getOwner()
-                ->customise([
+                ->customise(
+                    [
                     "Title" => _t(
                         "SilverCommerce\ContactAdmin.EditAddress",
                         "Edit Address"
@@ -158,19 +167,22 @@ class AccountControllerExtension extends Extension
                         "Edit Address"
                     ),
                     "Form" => $form
-                ]);
+                    ]
+                );
 
             $this->getOwner()->extend("updateEditAddress");
             
             return $this
                 ->getOwner()
-                ->renderWith([
+                ->renderWith(
+                    [
                     'AccountController_editaddress',
                     AccountController::class . '_editaddress',
                     'AccountController',
                     AccountController::class,
                     'Page'
-                ]);
+                    ]
+                );
         } else {
             return $this->getOwner()->httpError(404);
         }
@@ -191,7 +203,8 @@ class AccountControllerExtension extends Extension
             $address->delete();
             $this
                 ->owner
-                ->customise([
+                ->customise(
+                    [
                     "Title" => _t(
                         "SilverCommerce\ContactAdmin.AddressRemoved",
                         "Address Removed"
@@ -200,19 +213,22 @@ class AccountControllerExtension extends Extension
                         "SilverCommerce\ContactAdmin.AddressRemoved",
                         "Address Removed"
                     )
-                ]);
+                    ]
+                );
 
             $this->getOwner()->extend("updateEditAddress");
 
             return $this
                 ->getOwner()
-                ->renderWith([
+                ->renderWith(
+                    [
                     'AccountController_removeaddress',
                     AccountController::class . '_removeaddress',
                     'AccountController',
                     AccountController::class,
                     'Page'
-                ]);
+                    ]
+                );
         } else {
             return $this->getOwner()->httpError(404);
         }
@@ -305,7 +321,6 @@ class AccountControllerExtension extends Extension
      *
      * If the ID field is not set, we assume a new address is being
      * created.
-     *
      */
     public function doSaveAddress($data, $form)
     {
@@ -360,11 +375,15 @@ class AccountControllerExtension extends Extension
             ->getRequest()
             ->param("Action");
 
-        $menu->add(ArrayData::create([
-            "ID"    => 11,
-            "Title" => _t('SilverCommerce\ContactAdmin.Addresses', 'Addresses'),
-            "Link"  => $this->getOwner()->Link("addresses"),
-            "LinkingMode" => ($curr_action == "addresses") ? "current" : "link"
-        ]));
+        $menu->add(
+            ArrayData::create(
+                [
+                "ID"    => 11,
+                "Title" => _t('SilverCommerce\ContactAdmin.Addresses', 'Addresses'),
+                "Link"  => $this->getOwner()->Link("addresses"),
+                "LinkingMode" => ($curr_action == "addresses") ? "current" : "link"
+                ]
+            )
+        );
     }
 }
