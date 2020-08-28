@@ -2,6 +2,8 @@
 
 namespace SilverCommerce\ContactAdmin\Model;
 
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
@@ -13,10 +15,12 @@ use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Security\PermissionProvider;
 use SilverCommerce\ContactAdmin\Model\ContactTag;
+use SilverCommerce\ContactAdmin\Model\ContactLocation;
 use SilverStripe\ORM\FieldType\DBHTMLText as HTMLText;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
-use NathanCox\HasOneAutocompleteField\Forms\HasOneAutocompleteField;
 use SilverCommerce\VersionHistoryField\Forms\VersionHistoryField;
+use NathanCox\HasOneAutocompleteField\Forms\HasOneAutocompleteField;
+use SilverStripe\ORM\Queries\SQLSelect;
 
 /**
  * Details on a particular contact
@@ -85,22 +89,34 @@ class Contact extends DataObject implements PermissionProvider
         'Name' => 'Varchar',
         "DefaultAddress" => "Text"
     ];
-    
-    private static $summary_fields = [
+
+    private static $field_labels = [
         "FlaggedNice" =>"Flagged",
         "FirstName" => "FirstName",
         "Surname" => "Surname",
         "Email" => "Email",
         "DefaultAddress" => "Default Address",
         "TagsList" => "Tags",
-        "ListsList" => "Lists"
-    ];
-
-    private static $default_sort = [
-        "FirstName" => "ASC",
-        "Surname" => "ASC"
+        "ListsList" => "Lists",
+        "Locations.Address1" => 'Address 1',
+        "Locations.Address2" => 'Address 2',
+        "Locations.City" => 'City',
+        "Locations.Country" => 'Country',
+        "Locations.PostCode" => 'Post Code',
+        "Tags.Title" => 'Tag',
+        "Lists.Title" => 'List'
     ];
     
+    private static $summary_fields = [
+        "FlaggedNice",
+        "FirstName",
+        "Surname",
+        "Email",
+        "DefaultAddress",
+        "TagsList",
+        "ListsList"
+    ];
+
     private static $searchable_fields = [
         "FirstName",
         "Surname",
@@ -112,6 +128,21 @@ class Contact extends DataObject implements PermissionProvider
         "Locations.PostCode",
         "Tags.Title",
         "Lists.Title"
+    ];
+
+    private static $export_fields = [
+        "FirstName",
+        "Surname",
+        "Company",
+        "Phone",
+        "Mobile",
+        "Email",
+        "Source"
+    ];
+
+    private static $default_sort = [
+        "FirstName" => "ASC",
+        "Surname" => "ASC"
     ];
 
     /**
@@ -201,8 +232,38 @@ class Contact extends DataObject implements PermissionProvider
     }
 
     /**
+     * Get a contact with the most locations assigned
+     *
+     * @return self|null
+     */
+    public static function getByMostLocations()
+    {
+        $id = null;
+        $query = new SQLSelect();
+        $query
+            ->setFrom('Contact')
+            ->setSelect('Contact.ID, count(ContactLocation.ID) as LocationsCount')
+            ->addLeftJoin('ContactLocation', 'Contact.ID = ContactLocation.ContactID')
+            ->addGroupBy('Contact.ID')
+            ->addOrderBy('LocationsCount', 'DESC')
+            ->setLimit(1);
+
+        foreach($query->execute() as $row) {
+            $id = $row['ID'];
+        }
+
+        if (!empty($id)) {
+            return Contact::get()->byID($id);
+        }
+
+        return;
+    }
+
+    /**
      * Find from our locations one marked as default (of if not the
      * first in the list).
+     *
+     * If not location available, return a blank one
      *
      * @return ContactLocation
      */
@@ -212,6 +273,11 @@ class Contact extends DataObject implements PermissionProvider
             ->Locations()
             ->sort("Default", "DESC")
             ->first();
+        
+        if (empty($location)) {
+            $location = ContactLocation::create();
+            $location->ID = -1;
+        }
         
         $this->extend("updateDefaultLocation", $location);
 
@@ -242,13 +308,9 @@ class Contact extends DataObject implements PermissionProvider
      */
     public function getName() 
     {
-        $name = ($this->Surname) ? trim($this->FirstName . ' ' . $this->Surname) : $this->FirstName;
-        
-        $this->extend("updateName", $name);
-
-        return $name;
+        return $this->getFullName();
     }
-    
+
     /**
      * Generate as string of tag titles seperated by a comma
      *
@@ -257,15 +319,15 @@ class Contact extends DataObject implements PermissionProvider
     public function getTagsList()
     {
         $tags = $this->Tags()->column("Title");
-        
+
         $this->extend("updateTagsList", $tags);
-        
+
         return implode(
             $this->config()->list_seperator,
             $tags
         );
     }
-    
+
     /**
      * Generate as string of list titles seperated by a comma
      *
