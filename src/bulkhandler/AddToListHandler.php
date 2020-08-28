@@ -22,7 +22,7 @@ use SilverCommerce\ContactAdmin\Model\ContactList;
 
 /**
  * Bulk action handler that adds selected records to a list
- * 
+ *
  * @author ilateral
  * @package Contacts
  */
@@ -33,7 +33,7 @@ class AddToListHandler extends AddRelatedHandler
 
     /**
      * Front-end label for this handler's action
-     * 
+     *
      * @var string
      */
     protected $label = 'Add to List';
@@ -59,7 +59,7 @@ class AddToListHandler extends AddRelatedHandler
     
     /**
      * Creates and return the editing interface
-     * 
+     *
      * @return string Form's HTML
      */
     public function index()
@@ -73,7 +73,7 @@ class AddToListHandler extends AddRelatedHandler
         
         if ($this->request->isAjax()) {
             $response = new HTTPResponse(
-                Convert::raw2json(array('Content' => $form->forAjaxTemplate()->getValue()))
+                Convert::raw2json(['Content' => $form->forAjaxTemplate()->getValue()])
             );
             $response->addHeader('X-Pjax', 'Content');
             $response->addHeader('Content-Type', 'text/json');
@@ -82,13 +82,13 @@ class AddToListHandler extends AddRelatedHandler
             return $response;
         } else {
             $controller = $this->getToplevelController();
-            return $controller->customise(array('Content' => $form));
+            return $controller->customise(['Content' => $form]);
         }
     }
 
     /**
      * Return a form with a dropdown to select the list you want to use
-     * 
+     *
      * @return Form
      */
     public function Form()
@@ -129,7 +129,6 @@ class AddToListHandler extends AddRelatedHandler
                     ->addExtraClass('btn btn-success')
                     ->setAttribute('data-icon', 'accept')
                     ->setUseButtonTag(true),
-                    
                 FormAction::create('Cancel', _t('GRIDFIELD_BULKMANAGER_EDIT_HANDLER.CANCEL_BTN_LABEL', 'Cancel'))
                     ->setAttribute('id', 'bulkEditingUpdateCancelBtn')
                     ->addExtraClass('btn btn-danger cms-panel-link')
@@ -155,20 +154,20 @@ class AddToListHandler extends AddRelatedHandler
 
     /**
      * Saves the changes made in the bulk edit into the dataObject
-     * 
-     * @return HTTPResponse 
+     *
+     * @return HTTPResponse
      */
     public function doAddToList($data, /** @scrutinizer ignore-unused */ $form)
     {
         $className  = $this->gridField->list->dataClass;
         $controller = $this->getToplevelController();
         $form = $controller->EditForm();
-        $return = array();
+        $return = [];
 
         if (isset($data['RecordIDs'])) {
             $ids = explode(",", $data['RecordIDs']);
         } else {
-            $ids = array();
+            $ids = [];
         }
 
         $list_id = (isset($data['ContactListID'])) ? $data['ContactListID'] : 0;
@@ -193,14 +192,14 @@ class AddToListHandler extends AddRelatedHandler
                 ValidationResult::TYPE_ERROR
             );
                 
-            $responseNegotiator = new PjaxResponseNegotiator(array(
+            $responseNegotiator = new PjaxResponseNegotiator([
                 'CurrentForm' => function () use (&$form) {
                     return $form->forTemplate();
                 },
                 'default' => function () use (&$controller) {
                     return $controller->redirectBack();
                 }
-            ));
+            ]);
             
             if ($controller->getRequest()->isAjax()) {
                 $controller->getRequest()->addHeader('X-Pjax', 'CurrentForm');

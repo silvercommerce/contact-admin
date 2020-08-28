@@ -22,7 +22,7 @@ class AddRelatedHandler extends BulkActionHandler
 
         /**
          * Whether this handler should be called via an XHR from the front-end
-         * 
+         *
          * @var boolean
          */
     protected $xhr = false;
@@ -30,7 +30,7 @@ class AddRelatedHandler extends BulkActionHandler
     /**
      * Set to true is this handler will destroy any data.
      * A warning and confirmation will be shown on the front-end.
-     * 
+     *
      * @var boolean
      */
     protected $destructive = false;

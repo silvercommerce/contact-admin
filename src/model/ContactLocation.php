@@ -25,7 +25,7 @@ use SilverStripe\Security\Security;
  * @property bool   Default
  *
  * @method Contact Contact
- * 
+ *
  * @author  ilateral
  * @package Contacts
  */

@@ -180,7 +180,7 @@ class Contact extends DataObject implements PermissionProvider
 
     /**
      * Fields that can be synced with associated member
-     * 
+     *
      * @var array
      */
     private static $sync_fields = [
@@ -215,7 +215,7 @@ class Contact extends DataObject implements PermissionProvider
         return $title;
     }
 
-    public function getFullName() 
+    public function getFullName()
     {
         $parts = [];
 
@@ -261,7 +261,7 @@ class Contact extends DataObject implements PermissionProvider
             ->addOrderBy('LocationsCount', 'DESC')
             ->setLimit(1);
 
-        foreach($query->execute() as $row) {
+        foreach ($query->execute() as $row) {
             $id = $row['ID'];
         }
 
@@ -319,7 +319,7 @@ class Contact extends DataObject implements PermissionProvider
      *
      * @return string Returns the first- and surname of the member.
      */
-    public function getName() 
+    public function getName()
     {
         return $this->getFullName();
     }
@@ -376,7 +376,7 @@ class Contact extends DataObject implements PermissionProvider
     
     /**
      * Update an associated member with the data from this contact
-     * 
+     *
      * @return void
      */
     public function syncToMember()
@@ -405,7 +405,7 @@ class Contact extends DataObject implements PermissionProvider
 
     /**
      * Load custom search context to allow for filtering by flagged notes
-     * 
+     *
      * @return ContactSearchContext
      */
     public function getDefaultSearchContext()
@@ -419,7 +419,7 @@ class Contact extends DataObject implements PermissionProvider
 
     /**
      * Load custom search context for model admin plus
-     * 
+     *
      * @return ContactSearchContext
      */
     public function getModelAdminSearchContext()
@@ -501,10 +501,10 @@ class Contact extends DataObject implements PermissionProvider
     public function getCMSValidator()
     {
         $validator = new RequiredFields(
-            array(
+            [
             "FirstName",
             "Surname"
-            )
+            ]
         );
 
         $this->extend('updateCMSValidator', $validator);
@@ -563,7 +563,7 @@ class Contact extends DataObject implements PermissionProvider
     }
 
     /**
-     * Check field 
+     * Check field
      *
      * @param string $fieldName string
      *
@@ -584,8 +584,8 @@ class Contact extends DataObject implements PermissionProvider
 
     public function providePermissions()
     {
-        return array(
-            self::PERMISSION_MANAGE => array(
+        return [
+            self::PERMISSION_MANAGE => [
                 'name' => _t(
                     'Contacts.PERMISSION_MANAGE_CONTACTS_DESCRIPTION',
                     'Manage contacts'
@@ -595,8 +595,8 @@ class Contact extends DataObject implements PermissionProvider
                     'Allow creation and editing of contacts'
                 ),
                 'category' => _t('Contacts.Contacts', 'Contacts')
-            ),
-            self::PERMISSION_CREATE => array(
+            ],
+            self::PERMISSION_CREATE => [
                 'name' => _t(
                     'Contacts.PERMISSION_CREATE_CONTACTS_DESCRIPTION',
                     'Create contacts'
@@ -606,8 +606,8 @@ class Contact extends DataObject implements PermissionProvider
                     'Allow creation of contacts'
                 ),
                 'category' => _t('Contacts.Contacts', 'Contacts')
-            ),
-            self::PERMISSION_VIEW => array(
+            ],
+            self::PERMISSION_VIEW => [
                 'name' => _t(
                     'Contacts.PERMISSION_VIEW_CONTACTS_DESCRIPTION',
                     'View contacts'
@@ -617,8 +617,8 @@ class Contact extends DataObject implements PermissionProvider
                     'Allow viewing of contacts'
                 ),
                 'category' => _t('Contacts.Contacts', 'Contacts')
-            ),
-            self::PERMISSION_EDIT => array(
+            ],
+            self::PERMISSION_EDIT => [
                 'name' => _t(
                     'Contacts.PERMISSION_EDIT_CONTACTS_DESCRIPTION',
                     'Edit contacts'
@@ -628,8 +628,8 @@ class Contact extends DataObject implements PermissionProvider
                     'Allow editing of contacts'
                 ),
                 'category' => _t('Contacts.Contacts', 'Contacts')
-            ),
-            self::PERMISSION_DELETE => array(
+            ],
+            self::PERMISSION_DELETE => [
                 'name' => _t(
                     'Contacts.PERMISSION_DELETE_CONTACTS_DESCRIPTION',
                     'Delete contacts'
@@ -639,8 +639,8 @@ class Contact extends DataObject implements PermissionProvider
                     'Allow deleting of contacts'
                 ),
                 'category' => _t('Contacts.Contacts', 'Contacts')
-            )
-        );
+            ]
+        ];
     }
     
     public function canView($member = null)
@@ -721,7 +721,7 @@ class Contact extends DataObject implements PermissionProvider
 
     /**
      * Sync to associated member (if needed)
-     * 
+     *
      * @return void
      */
     public function onAfterWrite()

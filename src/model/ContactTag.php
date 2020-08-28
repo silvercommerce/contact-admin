@@ -70,8 +70,8 @@ class ContactTag extends DataObject implements PermissionProvider
     
     public function providePermissions()
     {
-        return array(
-            "CONTACTS_TAGS_MANAGE" => array(
+        return [
+            "CONTACTS_TAGS_MANAGE" => [
                 'name' => _t(
                     'Contacts.PERMISSION_MANAGE_CONTACTS_TAGS_DESCRIPTION',
                     'Manage contact tags'
@@ -81,8 +81,8 @@ class ContactTag extends DataObject implements PermissionProvider
                     'Allow creation and editing of contact lists'
                 ),
                 'category' => _t('Contacts.Contacts', 'Contacts')
-            ),
-            "CONTACTS_TAGS_DELETE" => array(
+            ],
+            "CONTACTS_TAGS_DELETE" => [
                 'name' => _t(
                     'Contacts.PERMISSION_DELETE_CONTACTS_TAGS_DESCRIPTION',
                     'Delete contact lists'
@@ -92,8 +92,8 @@ class ContactTag extends DataObject implements PermissionProvider
                     'Allow deleting of contact lists'
                 ),
                 'category' => _t('Contacts.Contacts', 'Contacts')
-            )
-        );
+            ]
+        ];
     }
 
     public function canView($member = null)

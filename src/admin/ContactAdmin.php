@@ -14,7 +14,7 @@ use ilateral\SilverStripe\ModelAdminPlus\ModelAdminPlus;
 
 /**
  * Management interface for contacts
- * 
+ *
  * @author  ilateral
  * @package Contacts
  */

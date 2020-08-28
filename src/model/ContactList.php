@@ -16,7 +16,7 @@ use Colymba\BulkManager\BulkAction\DeleteHandler;
  * @property string Title
  *
  * @method \SilverStripe\ORM\ManyManyList Contacts
- * 
+ *
  * @author  ilateral
  * @package Contacts
  */
@@ -83,8 +83,8 @@ class ContactList extends DataObject implements PermissionProvider
     
     public function providePermissions()
     {
-        return array(
-            "CONTACTS_LISTS_MANAGE" => array(
+        return [
+            "CONTACTS_LISTS_MANAGE" => [
                 'name' => _t(
                     'Contacts.PERMISSION_MANAGE_CONTACTS_LISTS_DESCRIPTION',
                     'Manage contact lists'
@@ -94,8 +94,8 @@ class ContactList extends DataObject implements PermissionProvider
                     'Allow creation and editing of contact lists'
                 ),
                 'category' => _t('Contacts.Contacts', 'Contacts')
-            ),
-            "CONTACTS_LISTS_DELETE" => array(
+            ],
+            "CONTACTS_LISTS_DELETE" => [
                 'name' => _t(
                     'Contacts.PERMISSION_DELETE_CONTACTS_LISTS_DESCRIPTION',
                     'Delete contact lists'
@@ -105,8 +105,8 @@ class ContactList extends DataObject implements PermissionProvider
                     'Allow deleting of contact lists'
                 ),
                 'category' => _t('Contacts.Contacts', 'Contacts')
-            )
-        );
+            ]
+        ];
     }
     
     public function canView($member = null)

@@ -19,7 +19,7 @@ use SilverCommerce\ContactAdmin\Model\ContactTag;
  * @property bool   Flag
  *
  * @method Contact Contact
- * 
+ *
  * @author  ilateral
  * @package Contacts
  */

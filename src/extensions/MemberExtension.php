@@ -72,7 +72,7 @@ class MemberExtension extends DataExtension
 
     /**
      * Update an associated member with the data from this contact
-     * 
+     *
      * @return void
      */
     public function syncToContact()
@@ -122,7 +122,5 @@ class MemberExtension extends DataExtension
         } else {
             $this->getOwner()->syncToContact();
         }
-
-
     }
 }
