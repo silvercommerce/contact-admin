@@ -3,7 +3,7 @@ SilverCommerce\ContactAdmin\Model\ContactTag:
     Title: "One"
   tag_two:
     Title: "Two"
-  tag_two:
+  tag_three:
     Title: "Three"
 SilverCommerce\ContactAdmin\Model\Contact:
   contact_one:
@@ -12,7 +12,7 @@ SilverCommerce\ContactAdmin\Model\Contact:
     Phone: "01234 123 456"
     Mobile: "07891 123 456"
     Tags:
-      - =>SilverCommerce\ContactAdmin\Model\Contact.tag_one
+      - =>SilverCommerce\ContactAdmin\Model\ContactTag.tag_one
   contact_two:
     FirstName: "Member"
     Surname: "Two"
@@ -20,21 +20,21 @@ SilverCommerce\ContactAdmin\Model\Contact:
     Mobile: "07891 456 123"
     Email: "member.two@notavaliddomain.com"
     Tags:
-      - =>SilverCommerce\ContactAdmin\Model\Contact.tag_one
-      - =>SilverCommerce\ContactAdmin\Model\Contact.tag_two
+      - =>SilverCommerce\ContactAdmin\Model\ContactTag.tag_one
+      - =>SilverCommerce\ContactAdmin\Model\ContactTag.tag_two
   contact_three:
     FirstName: "Contact"
     Surname: "Three"
     Phone: "01659 123 456"
     Tags:
-      - =>SilverCommerce\ContactAdmin\Model\Contact.tag_two
-      - =>SilverCommerce\ContactAdmin\Model\Contact.tag_three
+      - =>SilverCommerce\ContactAdmin\Model\ContactTag.tag_two
+      - =>SilverCommerce\ContactAdmin\Model\ContactTag.tag_three
   contact_four:
     FirstName: "Contact"
     Surname: "Four"
     Phone: "01234 789 456"
     Tags:
-      - =>SilverCommerce\ContactAdmin\Model\Contact.tag_three
+      - =>SilverCommerce\ContactAdmin\Model\ContactTag.tag_three
   contact_five:
     FirstName: "Contact"
     Email: "contact@notavaliddomain.com"

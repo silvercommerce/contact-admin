@@ -75,6 +75,6 @@ class ContactTest extends SapphireTest
         $this->assertEquals('One, Two', $two->getTagsList());
         $this->assertEquals('Two, Three', $three->getTagsList());
         $this->assertEquals('Three', $four->getTagsList());
-        $this->assertNull($five->getTagsList());
+        $this->assertEquals('', $five->getTagsList());
     }
 }
