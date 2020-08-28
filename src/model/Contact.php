@@ -22,6 +22,7 @@ use SilverCommerce\CatalogueAdmin\Search\ContactSearchContext;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverCommerce\VersionHistoryField\Forms\VersionHistoryField;
 use NathanCox\HasOneAutocompleteField\Forms\HasOneAutocompleteField;
+use SilverStripe\Core\Config\Config;
 
 /**
  * Details on a particular contact
@@ -45,6 +46,8 @@ use NathanCox\HasOneAutocompleteField\Forms\HasOneAutocompleteField;
  */
 class Contact extends DataObject implements PermissionProvider
 {
+    const LOCATION_BY_POS = 'LocationByPos';
+
     private static $table_name = 'Contact';
 
     /**
@@ -93,9 +96,6 @@ class Contact extends DataObject implements PermissionProvider
 
     private static $field_labels = [
         "FlaggedNice" =>"Flagged",
-        "FirstName" => "FirstName",
-        "Surname" => "Surname",
-        "Email" => "Email",
         "DefaultAddress" => "Default Address",
         "TagsList" => "Tags",
         "ListsList" => "Lists",
@@ -138,7 +138,9 @@ class Contact extends DataObject implements PermissionProvider
         "Phone",
         "Mobile",
         "Email",
-        "Source"
+        "Source",
+        "TagsList",
+        "ListsList"
     ];
 
     private static $default_sort = [
@@ -500,6 +502,10 @@ class Contact extends DataObject implements PermissionProvider
         return $validator;
     }
 
+    public function LocationByPos($pos = 0)
+    {
+    }
+
     /**
      * Get the default export fields for this object
      *
@@ -507,15 +513,33 @@ class Contact extends DataObject implements PermissionProvider
      */
     public function getExportFields()
     {
-        $rawFields = $this->config()->get('export_fields');
+        $raw_fields = $this->config()->get('export_fields');
+        $loc_fields = ContactLocation::singleton()->getExportFields();
 
         // Merge associative / numeric keys
         $fields = [];
-        foreach ($rawFields as $key => $value) {
+        foreach ($raw_fields as $key => $value) {
             if (is_int($key)) {
                 $key = $value;
             }
             $fields[$key] = $value;
+        }
+
+        // Work out address fields for export
+        $most_locations = self::getByMostLocations();
+        $location_count = 0;
+
+        if (!empty($most_locations)) {
+            $location_count = $most_locations->Locations()->count();
+        }
+
+        for ($i = 0; $i < $location_count; $i++) {
+            foreach ($loc_fields as $key => $value) {
+                if (is_int($key)) {
+                    $key = $value;
+                }
+                $fields[self::LOCATION_BY_POS . $i . '.' . $key] = 'Address' . $i . '_' . $value;
+            }
         }
 
         $this->extend("updateExportFields", $fields);
@@ -526,6 +550,26 @@ class Contact extends DataObject implements PermissionProvider
         }
 
         return $fields;
+    }
+
+    /**
+     * Check field 
+     *
+     * @param string $fieldName string
+     *
+     * @return mixed Will return null on a missing value
+     */
+    public function relField($fieldName)
+    {
+        /** @todo This is a bit in-effitient, woud be nice to do this with slightly less queries */
+        if (strpos($fieldName, self::LOCATION_BY_POS) !== false) {
+            $pos = (int) substr($fieldName, strlen(self::LOCATION_BY_POS), 1);
+            $loc_field = substr($fieldName, strpos($fieldName, '.') + 1);
+            $location = $this->Locations()->limit(1, $pos)->first();
+            return empty($location) ? "" : $location->$loc_field;
+        } else {
+            return parent::relField($fieldName);
+        }
     }
 
     public function providePermissions()
