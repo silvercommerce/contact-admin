@@ -48,6 +48,16 @@ class Contact extends DataObject implements PermissionProvider
 {
     const LOCATION_BY_POS = 'LocationByPos';
 
+    const PERMISSION_MANAGE = 'CONTACTS_MANAGE';
+
+    const PERMISSION_CREATE = 'CONTACTS_CREATE';
+
+    const PERMISSION_VIEW = 'CONTACTS_VIEW';
+
+    const PERMISSION_EDIT = 'CONTACTS_EDIT';
+
+    const PERMISSION_DELETE = 'CONTACTS_DELETE';
+
     private static $table_name = 'Contact';
 
     /**
@@ -575,7 +585,7 @@ class Contact extends DataObject implements PermissionProvider
     public function providePermissions()
     {
         return array(
-            "CONTACTS_MANAGE" => array(
+            self::PERMISSION_MANAGE => array(
                 'name' => _t(
                     'Contacts.PERMISSION_MANAGE_CONTACTS_DESCRIPTION',
                     'Manage contacts'
@@ -586,7 +596,40 @@ class Contact extends DataObject implements PermissionProvider
                 ),
                 'category' => _t('Contacts.Contacts', 'Contacts')
             ),
-            "CONTACTS_DELETE" => array(
+            self::PERMISSION_CREATE => array(
+                'name' => _t(
+                    'Contacts.PERMISSION_CREATE_CONTACTS_DESCRIPTION',
+                    'Create contacts'
+                ),
+                'help' => _t(
+                    'Contacts.PERMISSION_CREATE_CONTACTS_HELP',
+                    'Allow creation of contacts'
+                ),
+                'category' => _t('Contacts.Contacts', 'Contacts')
+            ),
+            self::PERMISSION_VIEW => array(
+                'name' => _t(
+                    'Contacts.PERMISSION_VIEW_CONTACTS_DESCRIPTION',
+                    'View contacts'
+                ),
+                'help' => _t(
+                    'Contacts.PERMISSION_CREATE_CONTACTS_HELP',
+                    'Allow viewing of contacts'
+                ),
+                'category' => _t('Contacts.Contacts', 'Contacts')
+            ),
+            self::PERMISSION_EDIT => array(
+                'name' => _t(
+                    'Contacts.PERMISSION_EDIT_CONTACTS_DESCRIPTION',
+                    'Edit contacts'
+                ),
+                'help' => _t(
+                    'Contacts.PERMISSION_EDIT_CONTACTS_HELP',
+                    'Allow editing of contacts'
+                ),
+                'category' => _t('Contacts.Contacts', 'Contacts')
+            ),
+            self::PERMISSION_DELETE => array(
                 'name' => _t(
                     'Contacts.PERMISSION_DELETE_CONTACTS_DESCRIPTION',
                     'Delete contacts'
@@ -612,7 +655,7 @@ class Contact extends DataObject implements PermissionProvider
             $member = Security::getCurrentUser();
         }
 
-        if ($member && Permission::checkMember($member->ID, "CONTACTS_MANAGE")) {
+        if ($member && Permission::checkMember($member->ID, [self::PERMISSION_MANAGE, self::PERMISSION_VIEW])) {
             return true;
         }
 
@@ -631,7 +674,7 @@ class Contact extends DataObject implements PermissionProvider
             $member = Security::getCurrentUser();
         }
 
-        if ($member && Permission::checkMember($member->ID, "CONTACTS_MANAGE")) {
+        if ($member && Permission::checkMember($member->ID, [self::PERMISSION_MANAGE, self::PERMISSION_CREATE])) {
             return true;
         }
 
@@ -650,7 +693,7 @@ class Contact extends DataObject implements PermissionProvider
             $member = Security::getCurrentUser();
         }
 
-        if ($member && Permission::checkMember($member->ID, "CONTACTS_MANAGE")) {
+        if ($member && Permission::checkMember($member->ID, [self::PERMISSION_MANAGE, self::PERMISSION_EDIT])) {
             return true;
         }
 
@@ -669,7 +712,7 @@ class Contact extends DataObject implements PermissionProvider
             $member = Security::getCurrentUser();
         }
 
-        if ($member && Permission::checkMember($member->ID, "CONTACTS_DELETE")) {
+        if ($member && Permission::checkMember($member->ID, self::PERMISSION_DELETE)) {
             return true;
         }
 
