@@ -1,0 +1,67 @@
+SilverCommerce\ContactAdmin\Model\ContactTag:
+  tag_one:
+    Title: "One"
+  tag_two:
+    Title: "Two"
+  tag_two:
+    Title: "Three"
+SilverCommerce\ContactAdmin\Model\Contact:
+  contact_one:
+    FirstName: "Member"
+    Surname: "One"
+    Phone: "01234 123 456"
+    Mobile: "07891 123 456"
+    Tags:
+      - =>SilverCommerce\ContactAdmin\Model\Contact.tag_one
+  contact_two:
+    FirstName: "Member"
+    Surname: "Two"
+    Phone: "01234 456 123"
+    Mobile: "07891 456 123"
+    Email: "member.two@notavaliddomain.com"
+    Tags:
+      - =>SilverCommerce\ContactAdmin\Model\Contact.tag_one
+      - =>SilverCommerce\ContactAdmin\Model\Contact.tag_two
+  contact_three:
+    FirstName: "Contact"
+    Surname: "Three"
+    Phone: "01659 123 456"
+    Tags:
+      - =>SilverCommerce\ContactAdmin\Model\Contact.tag_two
+      - =>SilverCommerce\ContactAdmin\Model\Contact.tag_three
+  contact_four:
+    FirstName: "Contact"
+    Surname: "Four"
+    Phone: "01234 789 456"
+    Tags:
+      - =>SilverCommerce\ContactAdmin\Model\Contact.tag_three
+  contact_five:
+    FirstName: "Contact"
+    Email: "contact@notavaliddomain.com"
+SilverCommerce\ContactAdmin\Model\ContactLocation:
+  contact_one_one:
+    Address1: '6 Pancras Square'
+    PostCode: 'N1C 4AG'
+    Contact: =>SilverCommerce\ContactAdmin\Model\Contact.contact_one
+  contact_one_two:
+    Address1: '2 Savoy Pl'
+    PostCode: 'WC2R 0BL'
+    Contact: =>SilverCommerce\ContactAdmin\Model\Contact.contact_one
+    Default: true
+  contact_two_one:
+    Address1: '21 Searle Ct Ave'
+    PostCode: 'BS4 4QR'
+    Contact: =>SilverCommerce\ContactAdmin\Model\Contact.contact_two
+    Default: true
+  contact_two_two:
+    Address1: '6 Pancras Square'
+    PostCode: 'N1C 4AG'
+    Contact: =>SilverCommerce\ContactAdmin\Model\Contact.contact_two
+  contact_two_three:
+    Address1: '2 Savoy Pl'
+    PostCode: 'WC2R 0BL'
+    Contact: =>SilverCommerce\ContactAdmin\Model\Contact.contact_two
+  contact_three_one:
+    Address1: '21 Searle Ct Ave'
+    PostCode: 'BS4 4QR'
+    Contact: =>SilverCommerce\ContactAdmin\Model\Contact.contact_three
