@@ -9,6 +9,7 @@ use SilverStripe\Versioned\Versioned;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Security\PermissionProvider;
 use SilverCommerce\VersionHistoryField\Forms\VersionHistoryField;
+use SilverStripe\Security\Security;
 
 /**
  * Details on a particular contact
@@ -28,7 +29,7 @@ use SilverCommerce\VersionHistoryField\Forms\VersionHistoryField;
  * @author  ilateral
  * @package Contacts
  */
-class ContactLocation extends DataObject implements PermissionProvider
+class ContactLocation extends DataObject
 {
     private static $table_name = 'ContactLocation';
 
@@ -91,6 +92,11 @@ class ContactLocation extends DataObject implements PermissionProvider
         "History"
     ];
 
+    /**
+     * Generate a title for this location
+     *
+     * @return string
+     */
     public function getTitle()
     {
         $title = $this->Address1 . " (" . $this->PostCode . ")";
@@ -100,29 +106,47 @@ class ContactLocation extends DataObject implements PermissionProvider
         return $title;
     }
 
-    public function getAddress() 
+    /**
+     * Get a list of address fields as an array
+     *
+     * @return array
+     */
+    protected function getAddressArray()
     {
-        $return = [];
-        $return[] = $this->Address1;
+        $array = [$this->Address1];
         
         if (!empty($this->Address2)) {
-            $return[] = $this->Address2;
+            $array[] = $this->Address2;
         }
         
-        $return[] = $this->City;
+        $array[] = $this->City;
 
         if (!empty($this->County)) {
-            $return[] = $this->County;
+            $array[] = $this->County;
         }
 
-        $return[] = $this->Country;
-        $return[] = $this->PostCode;
+        $array[] = $this->Country;
+        $array[] = $this->PostCode;
+
+        $this->extend("updateAddressArray", $array);
+
+        return $array;
+    }
+
+    /**
+     * Get the address from this location as a string
+     *
+     * @return string
+     */
+    public function getAddress()
+    {
+        $return = $this->getAddressArray();
 
         $this->extend("updateAddress", $return);
-        
+    
         return implode(",\n", $return);
     }
-    
+
     public function getCMSFields()
     {
         $self = $this;
@@ -159,35 +183,7 @@ class ContactLocation extends DataObject implements PermissionProvider
 
         return $validator;
     }
-    
-    public function providePermissions()
-    {
-        return [
-            "CONTACTS_MANAGE" => [
-                'name' => _t(
-                    'Contacts.PERMISSION_MANAGE_CONTACTS_DESCRIPTION',
-                    'Manage contacts'
-                ),
-                'help' => _t(
-                    'Contacts.PERMISSION_MANAGE_CONTACTS_HELP',
-                    'Allow creation and editing of contacts'
-                ),
-                'category' => _t('Contacts.Contacts', 'Contacts')
-            ],
-            "CONTACTS_DELETE" => [
-                'name' => _t(
-                    'Contacts.PERMISSION_DELETE_CONTACTS_DESCRIPTION',
-                    'Delete contacts'
-                ),
-                'help' => _t(
-                    'Contacts.PERMISSION_DELETE_CONTACTS_HELP',
-                    'Allow deleting of contacts'
-                ),
-                'category' => _t('Contacts.Contacts', 'Contacts')
-            ]
-        ];
-    }
-    
+
     public function canView($member = null)
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -208,7 +204,7 @@ class ContactLocation extends DataObject implements PermissionProvider
         }
 
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         if ($member && Permission::checkMember($member->ID, "CONTACTS_MANAGE")) {
