@@ -20,7 +20,6 @@ use ilateral\SilverStripe\ModelAdminPlus\ModelAdminPlus;
  */
 class ContactAdmin extends ModelAdminPlus
 {
-    
     private static $menu_priority = 0;
 
     private static $managed_models = [
@@ -54,44 +53,19 @@ class ContactAdmin extends ModelAdminPlus
      */
     private static $menu_icon_class = 'font-icon-torso';
 
-    public function getSearchContext()
+    /**
+     * Listen for customised export fields on the currently managed object
+     *
+     * @return array
+     */
+    public function getExportFields()
     {
-        $context = parent::getSearchContext();
-
-        if ($this->modelClass == Contact::class) {
-            $context
-                ->getFields()
-                ->push(
-                    CheckboxField::create(
-                        'q[Flagged]',
-                        _t("Contacts.ShowFlaggedOnly", 'Show flagged only')
-                    )
-                );
+        $model = singleton($this->modelClass);
+        if ($model->hasMethod('getExportFields')) {
+            return $model->getExportFields();
         }
 
-        return $context;
-    }
-
-    public function getList()
-    {
-        $list = parent::getList();
-
-        // use this to access search parameters
-        $params = $this->getSearchData();
-
-        if ($this->modelClass == Contact::class && isset($params['Flagged']) && $params['Flagged']) {
-            // Find flagged contacts and ensure that we return a DataList
-            // (not an arraylist)
-            $ids = $list->filterByCallback(
-                function ($item, $list) {
-                    return $item->getFlagged();
-                }
-            )->column("ID");
-
-            $list = Contact::get()->filter("ID", $ids);
-        }
-
-        return $list;
+        return parent::getExportFields();
     }
 
     public function getEditForm($id = null, $fields = null)
@@ -112,5 +86,21 @@ class ContactAdmin extends ModelAdminPlus
         $this->extend("updateEditForm", $form);
 
         return $form;
+    }
+
+    public function getList()
+    {
+        // Get contacts via Search Context results
+        if ($this->modelClass == Contact::class) {
+            /** @var Contact */
+            $context = singleton(Contact::class)->getDefaultSearchContext();
+            return $context->getResults([]);
+        }
+
+        $list = parent::getList();
+
+        $this->extend('updateContactAdminList', $list);
+
+        return $list;
     }
 }
