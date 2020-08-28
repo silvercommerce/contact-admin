@@ -70,3 +70,8 @@
 ## 1.2.6
 
 * Add additional extension hook to validator on ContactLocation
+
+## 1.3.0
+
+* Add improved contact import/export
+* Add additional contact permissions
