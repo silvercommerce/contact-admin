@@ -72,6 +72,16 @@ class ContactLocation extends DataObject
         "Default"
     ];
 
+    private static $export_fields = [
+        "Address1",
+        "Address2",
+        "City",
+        "County",
+        "Country",
+        "PostCode",
+        "Default"
+    ];
+
     /**
      * Add extension classes
      *
@@ -182,6 +192,34 @@ class ContactLocation extends DataObject
         $this->extend('updateCMSValidator', $validator);
 
         return $validator;
+    }
+
+    /**
+     * Get the default export fields for this object
+     *
+     * @return array
+     */
+    public function getExportFields()
+    {
+        $raw_fields = $this->config()->get('export_fields');
+
+        // Merge associative / numeric keys
+        $fields = [];
+        foreach ($raw_fields as $key => $value) {
+            if (is_int($key)) {
+                $key = $value;
+            }
+            $fields[$key] = $value;
+        }
+
+        $this->extend("updateExportFields", $fields);
+
+        // Final fail-over, just list ID field
+        if (!$fields) {
+            $fields['ID'] = 'ID';
+        }
+
+        return $fields;
     }
 
     public function canView($member = null)
