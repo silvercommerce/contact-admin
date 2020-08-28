@@ -12,15 +12,16 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Security\Permission;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Forms\RequiredFields;
+use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Security\PermissionProvider;
 use SilverCommerce\ContactAdmin\Model\ContactTag;
 use SilverCommerce\ContactAdmin\Model\ContactLocation;
 use SilverStripe\ORM\FieldType\DBHTMLText as HTMLText;
+use SilverCommerce\CatalogueAdmin\Search\ContactSearchContext;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverCommerce\VersionHistoryField\Forms\VersionHistoryField;
 use NathanCox\HasOneAutocompleteField\Forms\HasOneAutocompleteField;
-use SilverStripe\ORM\Queries\SQLSelect;
 
 /**
  * Details on a particular contact
@@ -390,6 +391,34 @@ class Contact extends DataObject implements PermissionProvider
         }
     }
 
+    /**
+     * Load custom search context to allow for filtering by flagged notes
+     * 
+     * @return ContactSearchContext
+     */
+    public function getDefaultSearchContext()
+    {
+        return ContactSearchContext::create(
+            static::class,
+            $this->scaffoldSearchFields(),
+            $this->defaultSearchFilters()
+        );
+    }
+
+    /**
+     * Load custom search context for model admin plus
+     * 
+     * @return ContactSearchContext
+     */
+    public function getModelAdminSearchContext()
+    {
+        return ContactSearchContext::create(
+            static::class,
+            $this->scaffoldSearchFields(),
+            $this->defaultSearchFilters()
+        );
+    }
+
     public function getCMSFields()
     {
         $self = $this;
@@ -470,7 +499,35 @@ class Contact extends DataObject implements PermissionProvider
 
         return $validator;
     }
-    
+
+    /**
+     * Get the default export fields for this object
+     *
+     * @return array
+     */
+    public function getExportFields()
+    {
+        $rawFields = $this->config()->get('export_fields');
+
+        // Merge associative / numeric keys
+        $fields = [];
+        foreach ($rawFields as $key => $value) {
+            if (is_int($key)) {
+                $key = $value;
+            }
+            $fields[$key] = $value;
+        }
+
+        $this->extend("updateExportFields", $fields);
+
+        // Final fail-over, just list ID field
+        if (!$fields) {
+            $fields['ID'] = 'ID';
+        }
+
+        return $fields;
+    }
+
     public function providePermissions()
     {
         return array(
