@@ -331,7 +331,10 @@ class Contact extends DataObject implements PermissionProvider
      */
     public function getTagsList()
     {
-        $tags = $this->Tags()->column("Title");
+        $tags = $this
+            ->Tags()
+            ->sort('Title', 'ASC')
+            ->column("Title");
 
         $this->extend("updateTagsList", $tags);
 
