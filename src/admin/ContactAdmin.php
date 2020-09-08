@@ -4,13 +4,15 @@ namespace SilverCommerce\ContactAdmin\Admin;
 
 use SilverStripe\Dev\CsvBulkLoader;
 use Colymba\BulkManager\BulkManager;
-use SilverStripe\Forms\CheckboxField;
 use SilverCommerce\ContactAdmin\Model\Contact;
 use SilverCommerce\ContactAdmin\Model\ContactTag;
 use SilverCommerce\ContactAdmin\Model\ContactList;
 use SilverCommerce\ContactAdmin\BulkActions\AddTagsHandler;
 use SilverCommerce\ContactAdmin\BulkActions\AddToListHandler;
 use ilateral\SilverStripe\ModelAdminPlus\ModelAdminPlus;
+use SilverCommerce\CatalogueAdmin\Forms\GridField\ContactDetailForm_ItemRequest;
+use SilverCommerce\ContactAdmin\Import\ContactCSVBulkLoader;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
 
 /**
  * Management interface for contacts
@@ -33,7 +35,7 @@ class ContactAdmin extends ModelAdminPlus
     private static $menu_title = 'Contacts';
 
     private static $model_importers = [
-        Contact::class => CSVBulkLoader::class,
+        Contact::class => ContactCSVBulkLoader::class,
         ContactTag::class => CSVBulkLoader::class,
         ContactList::class => CSVBulkLoader::class
     ];
@@ -73,6 +75,7 @@ class ContactAdmin extends ModelAdminPlus
         $form = parent::getEditForm($id, $fields);
         $class = $this->sanitiseClassName($this->modelClass);
         $gridField = $form->Fields()->fieldByName($class);
+        /** @var \SilverStripe\Forms\GridField\GridFieldConfig */
         $config = $gridField->getConfig();
 
         // Add bulk editing to gridfield
@@ -81,6 +84,10 @@ class ContactAdmin extends ModelAdminPlus
         if ($this->modelClass == Contact::class) {
             $manager->addBulkAction(AddTagsHandler::class);
             $manager->addBulkAction(AddToListHandler::class);
+
+            $config
+                ->getComponentByType(GridFieldDetailForm::class)
+                ->setItemRequestClass(ContactDetailForm_ItemRequest::class);
         }
 
         $this->extend("updateEditForm", $form);
