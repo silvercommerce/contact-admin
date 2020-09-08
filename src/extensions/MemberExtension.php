@@ -2,11 +2,11 @@
 
 namespace SilverCommerce\ContactAdmin\Extensions;
 
+use SilverCommerce\ContactAdmin\Helpers\ContactHelper;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\ReadonlyField;
 use SilverCommerce\ContactAdmin\Model\Contact;
-use SilverStripe\Core\Config\Config;
 
 /**
  * Add additional settings to a memeber object
@@ -71,37 +71,8 @@ class MemberExtension extends DataExtension
     }
 
     /**
-     * Update an associated member with the data from this contact
-     *
-     * @return void
-     */
-    public function syncToContact()
-    {
-        $owner = $this->getOwner();
-        $contact = $owner->Contact();
-        $sync = Config::inst()->get(Contact::class, 'sync_fields');
-        $write = false;
-
-        if (!$contact->exists()) {
-            return;
-        }
-
-        foreach ($owner->getChangedFields() as $field => $change) {
-            // If this field is a field to sync, and it is different
-            // then update contact
-            if (in_array($field, $sync) && $contact->$field != $owner->$field) {
-                $contact->$field = $owner->$field;
-                $write = true;
-            }
-        }
-
-        if ($write) {
-            $contact->write();
-        }
-    }
-
-    /**
      * If no contact exists for this account, then create one
+     * and push changed data to the contact
      *
      * @return void
      */
@@ -109,18 +80,12 @@ class MemberExtension extends DataExtension
     {
         parent::onAfterWrite();
 
-        if (!$this->getOwner()->Contact()->exists()) {
-            $sync = Config::inst()->get(Contact::class, 'sync_fields');
-            $contact = Contact::create();
+        if (ContactHelper::config()->get('auto_sync') && $this->getOwner()->isChanged()) {
+            $helper = ContactHelper::create();
+            $helper->setMember($this->getOwner());
+            $contact = $helper->findOrMakeContact();
 
-            foreach ($sync as $field) {
-                $contact->$field = $this->getOwner()->$field;
-            }
-
-            $contact->MemberID = $this->getOwner()->ID;
-            $contact->write();
-        } else {
-            $this->getOwner()->syncToContact();
+            ContactHelper::pushChangedFields($this->getOwner(), $contact);
         }
     }
 }

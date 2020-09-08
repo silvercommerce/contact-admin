@@ -22,6 +22,7 @@ use SilverCommerce\CatalogueAdmin\Search\ContactSearchContext;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverCommerce\VersionHistoryField\Forms\VersionHistoryField;
 use NathanCox\HasOneAutocompleteField\Forms\HasOneAutocompleteField;
+use SilverCommerce\ContactAdmin\Helpers\ContactHelper;
 use SilverStripe\Core\Config\Config;
 
 /**
@@ -142,6 +143,7 @@ class Contact extends DataObject implements PermissionProvider
     ];
 
     private static $export_fields = [
+        "ID",
         "FirstName",
         "Surname",
         "Company",
@@ -176,20 +178,6 @@ class Contact extends DataObject implements PermissionProvider
      */
     private static $versioning = [
         "History"
-    ];
-
-    /**
-     * Fields that can be synced with associated member
-     *
-     * @var array
-     */
-    private static $sync_fields = [
-        "FirstName",
-        "Surname",
-        "Company",
-        "Phone",
-        "Mobile",
-        "Email"
     ];
     
     public function getTitle()
@@ -376,35 +364,6 @@ class Contact extends DataObject implements PermissionProvider
 
         return $flagged;
     }
-    
-    /**
-     * Update an associated member with the data from this contact
-     *
-     * @return void
-     */
-    public function syncToMember()
-    {
-        $member = $this->Member();
-        $sync = $this->config()->sync_fields;
-        $write = false;
-
-        if (!$member->exists()) {
-            return;
-        }
-
-        foreach ($this->getChangedFields() as $field => $change) {
-            // If this field is a field to sync, and it is different
-            // then update member
-            if (in_array($field, $sync) && $member->$field != $this->$field) {
-                $member->$field = $this->$field;
-                $write = true;
-            }
-        }
-
-        if ($write) {
-            $member->write();
-        }
-    }
 
     /**
      * Load custom search context to allow for filtering by flagged notes
@@ -513,10 +472,6 @@ class Contact extends DataObject implements PermissionProvider
         $this->extend('updateCMSValidator', $validator);
 
         return $validator;
-    }
-
-    public function LocationByPos($pos = 0)
-    {
     }
 
     /**
@@ -731,7 +686,9 @@ class Contact extends DataObject implements PermissionProvider
     {
         parent::onAfterWrite();
 
-        $this->syncToMember();
+        if (ContactHelper::config()->get('auto_sync') && $this->isChanged() && $this->Member()->exists()) {
+            ContactHelper::pushChangedFields($this, $this->Member());
+        }
     }
 
     /**
