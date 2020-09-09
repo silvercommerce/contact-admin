@@ -220,8 +220,11 @@ class ContactCSVBulkLoader extends CsvBulkLoader
             $obj->write();
         }
 
-        ContactHelper::create()
-            ->setContact($obj)
-            ->findOrMakeMember();
+        $helper = ContactHelper::create()
+            ->setContact($obj);
+
+        $member = $helper->findOrMakeMember();
+        $helper->setMember($member);
+        $helper->linkMemberToGroups();
     }
 }

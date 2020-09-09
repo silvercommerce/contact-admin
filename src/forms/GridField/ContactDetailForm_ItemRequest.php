@@ -56,9 +56,12 @@ class ContactDetailForm_ItemRequest extends GridFieldDetailForm_ItemRequest
             return Security::permissionFailure($this);
         }
 
-        ContactHelper::create()
-            ->setContact($record)
-            ->findOrMakeMember();
+        $helper = ContactHelper::create()
+            ->setContact($record);
+
+        $member = $helper->findOrMakeMember();
+        $helper->setMember($member);
+        $helper->linkMemberToGroups();
         
         return $this->redirectAfterSave(false);
     }
