@@ -111,7 +111,7 @@ class ContactCSVBulkLoader extends CsvBulkLoader
      * @param array $address_data
      * @param int $pos
      *
-     * @return ContactLocation  
+     * @return ContactLocation
      */
     protected function findOrMakeLocation(Contact $contact, array $address_data, int $pos)
     {

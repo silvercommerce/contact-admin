@@ -89,7 +89,7 @@ class ContactHelperTest extends SapphireTest
         $member_one = $this->objFromFixture(Member::class, 'member_one');
 
         // Change name and last edited. Not ideal, but last edited is often the same as created
-        // due to scrip execution time 
+        // due to scrip execution time
         $contact_one->FirstName = "Member Changed";
 
         $helper = ContactHelper::create()

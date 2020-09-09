@@ -16,7 +16,7 @@ class ContactHelper
 
     /**
      * The field that is shared between Members and Contacts.
-     * 
+     *
      * Defaults to "Email"
      *
      * @var string
@@ -46,7 +46,7 @@ class ContactHelper
     private static $auto_sync = true;
 
     /**
-     * Add codes for default groups linked user accounts are added to 
+     * Add codes for default groups linked user accounts are added to
      *
      * @var array
      */
@@ -81,7 +81,7 @@ class ContactHelper
         $member = $contact->Member();
         $link = false;
 
-        // If no member assigned, try to find one with matching field 
+        // If no member assigned, try to find one with matching field
         if (empty($member) || !$member->exists()) {
             $common_field = $this->config()->common_field;
             $member = Member::get()->find($common_field, $contact->{$common_field});
@@ -122,7 +122,7 @@ class ContactHelper
         $contact = $member->Contact();
         $link = false;
 
-        // If no member assigned, try to find one with matching field 
+        // If no member assigned, try to find one with matching field
         if (empty($contact) || !$contact->exists()) {
             $common_field = $this->config()->common_field;
             $contact = Contact::get()->find($common_field, $member->{$common_field});
@@ -147,11 +147,11 @@ class ContactHelper
 
     /**
      * Update an associated member with the data from this contact
-     * 
+     *
      * @todo Currently sync is pretty basic (pushes data from one object to another). This could be more intilligent.
      *
      * @param bool $write Write the syncronised record
-     * 
+     *
      * @return void
      */
     public function syncContactAndMember(bool $write = true)
@@ -185,8 +185,8 @@ class ContactHelper
 
     /**
      * Push any fields relevent fields changed on the origin obvject, to the destination,
-     * if the destination is different. 
-     * 
+     * if the destination is different.
+     *
      * @var DataObject $origin
      * @var DataObject $destination
      *
@@ -212,7 +212,7 @@ class ContactHelper
      * (if values do not match)
      *
      * Return a list of fields pushed
-     * 
+     *
      * @var DataObject $origin
      * @var DataObject $destination
      *
@@ -237,8 +237,8 @@ class ContactHelper
      * Link the set member to all the groups specified via config
      *
      * Return the number of groups added
-     * 
-     * @return int 
+     *
+     * @return int
      */
     public function linkMemberToGroups()
     {
@@ -270,7 +270,7 @@ class ContactHelper
      * Get the value of contact. If not assigned directly, try to get from the member
      *
      * @return Contact
-     */ 
+     */
     public function getContact()
     {
         $contact = $this->contact;
@@ -288,7 +288,7 @@ class ContactHelper
      * @param Contact $contact
      *
      * @return self
-     */ 
+     */
     public function setContact(Contact $contact)
     {
         $this->contact = $contact;
@@ -299,7 +299,7 @@ class ContactHelper
      * Get the value of member. If not assigned directly, try to get from Contact
      *
      * @return Member
-     */ 
+     */
     public function getMember()
     {
         $member = $this->member;
@@ -317,7 +317,7 @@ class ContactHelper
      * @param Member $member
      *
      * @return self
-     */ 
+     */
     public function setMember(Member $member)
     {
         $this->member = $member;
