@@ -4,9 +4,11 @@ namespace SilverCommerce\ContactAdmin\Import;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\CsvBulkLoader;
-use SilverCommerce\CatalogueAdmin\Model\ProductTag;
+use SilverCommerce\ContactAdmin\Helpers\ContactHelper;
 use SilverCommerce\ContactAdmin\Model\Contact;
+use SilverCommerce\ContactAdmin\Model\ContactList;
 use SilverCommerce\ContactAdmin\Model\ContactLocation;
+use SilverCommerce\ContactAdmin\Model\ContactTag;
 
 /**
  * Allow slightly more complex product imports from a CSV file
@@ -20,7 +22,8 @@ class ContactCSVBulkLoader extends CsvBulkLoader
 
     public $columnMap = [
         "TagsList"              => '->importTagsList',
-        "ListsList"              => '->importTagsList'
+        "ListsList"              => '->importTagsList',
+        "CreateMember"              => '->createMemberObject',
     ];
 
     public $duplicateChecks = [
@@ -176,11 +179,15 @@ class ContactCSVBulkLoader extends CsvBulkLoader
 
     public static function importTagsList(&$obj, $val, $record)
     {
+        if (!$obj->exists()) {
+            $obj->write();
+        }
+
         self::createRelationFromList(
             $obj,
             'Tags',
             explode(",", $val),
-            ProductTag::class,
+            ContactTag::class,
             'Title',
             true
         );
@@ -188,13 +195,33 @@ class ContactCSVBulkLoader extends CsvBulkLoader
 
     public static function importListsList(&$obj, $val, $record)
     {
+        if (!$obj->exists()) {
+            $obj->write();
+        }
+
         self::createRelationFromList(
             $obj,
             'Lists',
             explode(",", $val),
-            ProductTag::class,
+            ContactList::class,
             'Title',
             true
         );
+    }
+
+    /**
+     * Generate a user account for this contact
+     *
+     * @return null
+     */
+    public static function createMemberObject(&$obj, $val, $record)
+    {
+        if (!$obj->exists()) {
+            $obj->write();
+        }
+
+        ContactHelper::create()
+            ->setContact($obj)
+            ->findOrMakeMember();
     }
 }

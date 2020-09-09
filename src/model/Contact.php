@@ -152,7 +152,9 @@ class Contact extends DataObject implements PermissionProvider
         "Email",
         "Source",
         "TagsList",
-        "ListsList"
+        "ListsList",
+        "MemberID",
+        "CreateMember"
     ];
 
     private static $default_sort = [
