@@ -7,3 +7,6 @@ SilverStripe\Admin\LeftAndMain:
 SilverStripe\Security\Member:
   extensions:
     - SilverCommerce\ContactAdmin\Extensions\MemberExtension
+SilverStripe\Security\Group:
+  extensions:
+    - SilverCommerce\ContactAdmin\Extensions\GroupExtension

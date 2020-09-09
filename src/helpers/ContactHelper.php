@@ -8,6 +8,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverCommerce\ContactAdmin\Model\Contact;
+use SilverStripe\Security\Group;
 
 class ContactHelper
 {
@@ -45,6 +46,15 @@ class ContactHelper
     private static $auto_sync = true;
 
     /**
+     * Add codes for default groups linked user accounts are added to 
+     *
+     * @var array
+     */
+    private static $default_user_groups = [
+        'contact_users' => 'Contact Users'
+    ];
+
+    /**
      * @var Contact
      */
     private $contact;
@@ -57,7 +67,7 @@ class ContactHelper
     /**
      * Create a member from the provided contact
      *
-     * @return self
+     * @return Member
      */
     public function findOrMakeMember()
     {
@@ -98,7 +108,7 @@ class ContactHelper
     /**
      * Find or create a Contact from the provided member
      *
-     * @return self
+     * @return Contact
      */
     public function findOrMakeContact()
     {
@@ -221,6 +231,39 @@ class ContactHelper
         }
 
         return $changes;
+    }
+
+    /**
+     * Link the set member to all the groups specified via config
+     *
+     * Return the number of groups added
+     * 
+     * @return int 
+     */
+    public function linkMemberToGroups()
+    {
+        $member = $this->getMember();
+        $groups = $this->config()->get('default_user_groups');
+        $count = 0;
+
+        if (empty($member)) {
+            throw new LogicException('Must set a Member');
+        }
+
+        if (empty($groups)) {
+            return $count;
+        }
+
+        foreach (array_keys($groups) as $code) {
+            $group = Group::get()->filter('Code', $code)->first();
+
+            if (!empty($group)) {
+                $member->Groups()->add($group);
+                $count++;
+            }
+        }
+
+        return $count;
     }
 
     /**
