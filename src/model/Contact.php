@@ -244,11 +244,11 @@ class Contact extends DataObject implements PermissionProvider
         $id = null;
         $query = new SQLSelect();
         $query
-            ->setFrom('Contact')
-            ->setSelect('Contact.ID, count(ContactLocation.ID) as LocationsCount')
-            ->addLeftJoin('ContactLocation', 'Contact.ID = ContactLocation.ContactID')
-            ->addGroupBy('Contact.ID')
-            ->addOrderBy('LocationsCount', 'DESC')
+            ->setFrom('"Contact"')
+            ->setSelect('"Contact"."ID", count("ContactLocation"."ID") as LocationsCount')
+            ->addLeftJoin('ContactLocation', '"Contact"."ID" = "ContactLocation"."ContactID"')
+            ->addGroupBy('"Contact"."ID"')
+            ->addOrderBy('"LocationsCount"', 'DESC')
             ->setLimit(1);
 
         foreach ($query->execute() as $row) {
