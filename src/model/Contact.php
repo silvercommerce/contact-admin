@@ -248,7 +248,7 @@ class Contact extends DataObject implements PermissionProvider
             ->setSelect('"Contact"."ID", count("ContactLocation"."ID") as LocationsCount')
             ->addLeftJoin('ContactLocation', '"Contact"."ID" = "ContactLocation"."ContactID"')
             ->addGroupBy('"Contact"."ID"')
-            ->addOrderBy('"LocationsCount"', 'DESC')
+            ->addOrderBy('LocationsCount', 'DESC')
             ->setLimit(1);
 
         foreach ($query->execute() as $row) {
