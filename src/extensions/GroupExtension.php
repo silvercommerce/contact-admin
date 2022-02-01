@@ -22,6 +22,13 @@ class GroupExtension extends DataExtension
                 continue;
             }
 
+            $existing = Group::get()->find('Code', $code);
+
+            if (!empty($existing)) {
+                DB::alteration_message('Skipping existing group ' . $title, 'error');
+                continue;
+            }
+
             $group =  Group::create([
                 'Code' => $code,
                 'Title' => $title

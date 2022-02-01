@@ -75,3 +75,7 @@
 
 * Add improved contact import/export
 * Add additional contact permissions
+
+## 1.3.1
+
+* Ensure that only one of each user group is created on build
