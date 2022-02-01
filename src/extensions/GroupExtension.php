@@ -2,10 +2,11 @@
 
 namespace SilverCommerce\ContactAdmin\Extensions;
 
+use SilverStripe\ORM\DB;
+use SilverStripe\Core\Convert;
 use SilverStripe\Security\Group;
 use SilverStripe\ORM\DataExtension;
 use SilverCommerce\ContactAdmin\Helpers\ContactHelper;
-use SilverStripe\ORM\DB;
 
 /**
  * Scaffold Any Default User Groups
@@ -22,6 +23,8 @@ class GroupExtension extends DataExtension
                 continue;
             }
 
+            $code = Convert::raw2url($code);
+
             $existing = Group::get()->find('Code', $code);
 
             if (!empty($existing)) {
@@ -29,10 +32,9 @@ class GroupExtension extends DataExtension
                 continue;
             }
 
-            $group =  Group::create([
-                'Code' => $code,
-                'Title' => $title
-            ]);
+            $group = Group::create();
+            $group->Code = $code;
+            $group->Title = $title;
             $group->write();
 
             DB::alteration_message('Created group ' . $title, 'created');

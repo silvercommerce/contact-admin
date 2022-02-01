@@ -51,7 +51,7 @@ class ContactHelper
      * @var array
      */
     private static $default_user_groups = [
-        'contact_users' => 'Contact Users'
+        'contact-users' => 'Contact Users'
     ];
 
     /**

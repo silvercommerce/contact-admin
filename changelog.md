@@ -79,3 +79,11 @@
 ## 1.3.1
 
 * Ensure that only one of each user group is created on build
+
+## 1.3.2
+
+* Change default contact group tag matches what is converted by SilverStripe
+
+## 1.3.3
+
+* Ensure groups are using a compatible code when initially creating.
