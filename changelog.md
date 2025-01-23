@@ -87,3 +87,7 @@
 ## 1.3.3
 
 * Ensure groups are using a compatible code when initially creating.
+
+## 1.4.0
+
+* Add SS5 support
