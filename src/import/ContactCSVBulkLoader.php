@@ -13,8 +13,6 @@ use SilverCommerce\ContactAdmin\Model\ContactTag;
 /**
  * Allow slightly more complex product imports from a CSV file
  *
- * @author i-lateral (http://www.i-lateral.com)
- * @package catalogue
  */
 class ContactCSVBulkLoader extends CsvBulkLoader
 {

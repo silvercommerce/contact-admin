@@ -9,7 +9,7 @@ use SilverCommerce\ContactAdmin\Model\ContactTag;
 use SilverCommerce\ContactAdmin\Model\ContactList;
 use SilverCommerce\ContactAdmin\BulkActions\AddTagsHandler;
 use SilverCommerce\ContactAdmin\BulkActions\AddToListHandler;
-use ilateral\SilverStripe\ModelAdminPlus\ModelAdminPlus;
+use DFT\SilverStripe\ModelAdminPlus\ModelAdminPlus;
 use SilverCommerce\CatalogueAdmin\Forms\GridField\ContactDetailForm_ItemRequest;
 use SilverCommerce\ContactAdmin\Import\ContactCSVBulkLoader;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
@@ -17,8 +17,6 @@ use SilverStripe\Forms\GridField\GridFieldDetailForm;
 /**
  * Management interface for contacts
  *
- * @author  ilateral
- * @package Contacts
  */
 class ContactAdmin extends ModelAdminPlus
 {

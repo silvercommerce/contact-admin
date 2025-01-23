@@ -26,8 +26,6 @@ use SilverStripe\Security\Security;
  *
  * @method Contact Contact
  *
- * @author  ilateral
- * @package Contacts
  */
 class ContactLocation extends DataObject
 {

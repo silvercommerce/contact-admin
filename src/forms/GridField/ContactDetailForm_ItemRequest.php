@@ -11,7 +11,6 @@ use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
 /**
  * Custom detailform that allows generating user account from a contact
  *
- * @author ilateral
  */
 class ContactDetailForm_ItemRequest extends GridFieldDetailForm_ItemRequest
 {

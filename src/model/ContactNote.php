@@ -6,11 +6,6 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBHTMLText as HTMLText;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
-use SilverStripe\Forms\RequiredFields;
-use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
-use SilverStripe\TagField\TagField;
-use SilverCommerce\ContactAdmin\Model\ContactTag;
 
 /**
  * Notes on a particular contact
@@ -20,8 +15,6 @@ use SilverCommerce\ContactAdmin\Model\ContactTag;
  *
  * @method Contact Contact
  *
- * @author  ilateral
- * @package Contacts
  */
 class ContactNote extends DataObject
 {

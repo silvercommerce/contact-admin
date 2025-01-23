@@ -23,8 +23,6 @@ use SilverCommerce\ContactAdmin\Model\ContactList;
 /**
  * Bulk action handler that adds selected records to a list
  *
- * @author ilateral
- * @package Contacts
  */
 class AddToListHandler extends AddRelatedHandler
 {

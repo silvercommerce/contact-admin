@@ -42,8 +42,6 @@ use SilverStripe\Core\Config\Config;
  * @method \SilverStripe\ORM\ManyManyList Tags
  * @method \SilverStripe\ORM\ManyManyList Lists
  *
- * @author  ilateral
- * @package Contacts
  */
 class Contact extends DataObject implements PermissionProvider
 {

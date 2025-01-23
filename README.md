@@ -12,9 +12,6 @@ These contacts are generic objects and so are designed to be extended on
 Also adds autocomplete based filtering to the contact admin interface for easier
 searching of records.
 
-## Author
-This module was created by [i-lateral](http://www.i-lateral.com).
-
 ## Installation
 Install this module either by downloading and adding to:
 
