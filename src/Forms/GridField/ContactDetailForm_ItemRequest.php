@@ -32,13 +32,13 @@ class ContactDetailForm_ItemRequest extends GridFieldDetailForm_ItemRequest
         ) {
             $actions = $form->Actions();
             $actions->insertAfter(
+                "action_doSave",
                 FormAction::create(
                     'doCreateUser',
                     _t('ContactAdmin.CreateUser', 'Create User Account')
                 )->setUseButtonTag(true)
                 ->addExtraClass('btn btn-outline-info')
-                ->addExtraClass('action font-icon-torso'),
-                "action_doSave"
+                ->addExtraClass('action font-icon-torso')
             );
         }
         
