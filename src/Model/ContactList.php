@@ -3,7 +3,7 @@
 namespace SilverCommerce\ContactAdmin\Model;
 
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use Colymba\BulkManager\BulkManager;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionProvider;
@@ -116,7 +116,7 @@ class ContactList extends DataObject implements PermissionProvider
         }
 
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         if ($member && Permission::checkMember($member->ID, "CONTACTS_LISTS_MANAGE")) {
@@ -135,7 +135,7 @@ class ContactList extends DataObject implements PermissionProvider
         }
 
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         if ($member && Permission::checkMember($member->ID, "CONTACTS_LISTS_MANAGE")) {
@@ -154,7 +154,7 @@ class ContactList extends DataObject implements PermissionProvider
         }
 
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
    
         if ($member && Permission::checkMember($member->ID, "CONTACTS_LISTS_MANAGE")) {
@@ -173,7 +173,7 @@ class ContactList extends DataObject implements PermissionProvider
         }
 
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
    
         if ($member && Permission::checkMember($member->ID, "CONTACTS_LISTS_DELETE")) {

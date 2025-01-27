@@ -3,7 +3,7 @@
 namespace SilverCommerce\ContactAdmin\Model;
 
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use Colymba\BulkManager\BulkManager;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionProvider;
@@ -105,7 +105,7 @@ class ContactTag extends DataObject implements PermissionProvider
         }
         
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
             
         if ($member && Permission::checkMember($member->ID, "CONTACTS_TAGS_MANAGE")) {
@@ -124,7 +124,7 @@ class ContactTag extends DataObject implements PermissionProvider
         }
         
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
             
         if ($member && Permission::checkMember($member->ID, "CONTACTS_TAGS_MANAGE")) {
@@ -143,7 +143,7 @@ class ContactTag extends DataObject implements PermissionProvider
         }
         
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
             
         if ($member && Permission::checkMember($member->ID, "CONTACTS_TAGS_MANAGE")) {
@@ -162,7 +162,7 @@ class ContactTag extends DataObject implements PermissionProvider
         }
         
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
             
         if ($member && Permission::checkMember($member->ID, "CONTACTS_TAGS_DELETE")) {

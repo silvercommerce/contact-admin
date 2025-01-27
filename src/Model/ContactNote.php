@@ -3,9 +3,9 @@
 namespace SilverCommerce\ContactAdmin\Model;
 
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\FieldType\DBHTMLText as HTMLText;
-use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\Security\Permission;
+use SilverStripe\ORM\FieldType\DBHTMLText as HTMLText;
 
 /**
  * Notes on a particular contact
@@ -75,7 +75,7 @@ class ContactNote extends DataObject
         }
 
         if (!$member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         if ($member && Permission::checkMember($member->ID, "CONTACTS_MANAGE")) {

@@ -2,13 +2,10 @@
 
 namespace SilverCommerce\ContactAdmin\Model;
 
-use SilverStripe\ORM\DB;
-use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\TagField\TagField;
-use SilverStripe\Forms\DropdownField;
 use SilverStripe\Security\Permission;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Forms\RequiredFields;
