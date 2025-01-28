@@ -91,3 +91,4 @@
 ## 1.4.0
 
 * Add SS5 support
+* Minor UI improvements
