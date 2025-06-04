@@ -14,7 +14,7 @@ class ContactHelperTest extends SapphireTest
 {
     protected static $fixture_file = 'ContactHelperTest.yml';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         // Disable auto sync so that data is created as per fixtures
         $curr = ContactHelper::config()->get('auto_sync');

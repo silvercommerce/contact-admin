@@ -92,3 +92,7 @@
 
 * Add SS5 support
 * Minor UI improvements
+
+## 1.5.0
+
+* SS5 dedicated version of `1.4.*`
